@@ -1402,20 +1402,20 @@ export default class Flipbook {
 
 		animateLightFlash(baseDur);
 		await animateLogoFlash(baseDur);
-		if (this.introPhase === "COMPLETED") return;
+		if ((this.introPhase as string) === "COMPLETED") return;
 
 		await animateCaptionZoom(zoomDur);
-		if (this.introPhase === "COMPLETED") return;
+		if ((this.introPhase as string) === "COMPLETED") return;
 
 		await animateDevframesZoom(zoomDur);
-		if (this.introPhase === "COMPLETED") return;
+		if ((this.introPhase as string) === "COMPLETED") return;
 
 		transitionToBottomView(baseDur);
 		await sleep(isMobile ? 400 : 1200);
-		if (this.introPhase === "COMPLETED") return;
+		if ((this.introPhase as string) === "COMPLETED") return;
 
 		await transitionRaise(baseDur);
-		if (this.introPhase === "COMPLETED") return;
+		if ((this.introPhase as string) === "COMPLETED") return;
 
 		// finalize
 		const navDock = document.getElementById("book-nav-dock");
@@ -1462,6 +1462,5 @@ export default class Flipbook {
 
 		this.restoreCamera(400);
 		this.updateCursor();
-	}
 	}
 }
