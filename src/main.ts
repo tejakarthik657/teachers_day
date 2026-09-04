@@ -37,9 +37,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const pageWidth = 764;
 	const pageHeight = 1080;
 
-	// Render all 14 pages dynamically on high-DPI canvas
+	const progressInner = document.querySelector(".progress-inner") as HTMLElement;
+
+	// Render all 14 pages dynamically on adaptive high-DPI canvas
 	const renderer = new PageRenderer(1528, 2160);
-	const renderedPages = await renderer.renderAllPages(bookContent);
+	const renderedPages = await renderer.renderAllPages(bookContent, percent => {
+		if (progressInner) {
+			progressInner.style.width = `${percent}%`;
+		}
+	});
 
 	// Zoom coordinates for interactive memory inspection
 	const pageActiveAreas: PageActiveArea[] = [

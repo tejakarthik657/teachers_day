@@ -50,12 +50,22 @@ export class PageRenderer {
 		});
 	}
 
-	public async renderAllPages(content: BookContent): Promise<string[]> {
+	public async renderAllPages(
+		content: BookContent,
+		onProgress?: (percent: number) => void,
+	): Promise<string[]> {
 		await this.preloadImages(content);
 		await document.fonts?.ready;
 
-		const targetWidth = 2048;
-		const targetHeight = Math.round(targetWidth * (this.height / this.width)); // 2896
+		const isMobile =
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent,
+			) || window.innerWidth <= 768;
+
+		// 1024x1448 on mobile (uses 1/4th VRAM, zero lag, silky smooth WebGL load)
+		// 1600x2262 on desktop
+		const targetWidth = isMobile ? 1024 : 1600;
+		const targetHeight = Math.round(targetWidth * (this.height / this.width));
 		const scaleX = targetWidth / this.width;
 		const scaleY = targetHeight / this.height;
 
@@ -73,7 +83,11 @@ export class PageRenderer {
 			await this.renderPage(ctx, i, content);
 			ctx.restore();
 
-			pages.push(canvas.toDataURL("image/png"));
+			pages.push(canvas.toDataURL("image/jpeg", 0.92));
+			onProgress?.(Math.round(((i + 1) / 14) * 100));
+
+			// Yield to browser UI thread to prevent main thread freezing
+			await new Promise(resolve => setTimeout(resolve, 10));
 		}
 
 		return pages;
