@@ -148,17 +148,29 @@ export default class Flipbook {
 			9000,
 		);
 
+		const isMobile =
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent,
+			) || window.innerWidth <= 768;
+
 		this.renderer = new THREE.WebGLRenderer({
-			antialias: true,
+			antialias: !isMobile,
 			powerPreference: "high-performance",
 			alpha: true,
 		});
 		this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-		this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+		this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.shadowMap.enabled = true;
 		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 		this.renderer.domElement.classList.add("flipbook-canvas");
+
+		const overlayEl = this.containerEl.querySelector(".intro-overlay") as HTMLElement;
+		if (overlayEl) {
+			overlayEl.style.cursor = "pointer";
+			overlayEl.addEventListener("click", () => this.skipIntro());
+			overlayEl.addEventListener("touchstart", () => this.skipIntro(), { passive: true });
+		}
 		this.wrapperLinkEl = document.createElement("a");
 		this.wrapperLinkEl.draggable = false;
 		this.wrapperLinkEl.classList.add("wrapper-link");
@@ -1380,24 +1392,76 @@ export default class Flipbook {
 			await sleep(800);
 		};
 
-		animateLightFlash(2500);
-		await animateLogoFlash(2500);
-		await animateCaptionZoom(2200);
-		await animateDevframesZoom(2200);
+		const isMobile =
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent,
+			) || window.innerWidth <= 768;
 
-		transitionToBottomView(2500);
-		await sleep(1500);
-		await transitionRaise(2500);
+		const baseDur = isMobile ? 900 : 2200;
+		const zoomDur = isMobile ? 800 : 1800;
+
+		animateLightFlash(baseDur);
+		await animateLogoFlash(baseDur);
+		if (this.introPhase === "COMPLETED") return;
+
+		await animateCaptionZoom(zoomDur);
+		if (this.introPhase === "COMPLETED") return;
+
+		await animateDevframesZoom(zoomDur);
+		if (this.introPhase === "COMPLETED") return;
+
+		transitionToBottomView(baseDur);
+		await sleep(isMobile ? 400 : 1200);
+		if (this.introPhase === "COMPLETED") return;
+
+		await transitionRaise(baseDur);
+		if (this.introPhase === "COMPLETED") return;
 
 		// finalize
+		const navDock = document.getElementById("book-nav-dock");
+		const hintToast = document.getElementById("hint-toast");
+		navDock?.classList.add("visible");
+		hintToast?.classList.add("visible");
+		setTimeout(() => hintToast?.classList.remove("visible"), 5000);
+
 		gsap.to(this.introOverlay.dom.container, {
 			opacity: 0,
-			duration: 0.8,
+			duration: 0.6,
 			onComplete: () => {
 				this.introOverlay.dom.container.style.display = "none";
 			},
 		});
 		this.updateCursor();
 		this.introPhase = "COMPLETED";
+	}
+
+	public skipIntro() {
+		if (this.introPhase === "COMPLETED") return;
+		this.introPhase = "COMPLETED";
+
+		const navDock = document.getElementById("book-nav-dock");
+		const hintToast = document.getElementById("hint-toast");
+		navDock?.classList.add("visible");
+		hintToast?.classList.add("visible");
+		setTimeout(() => hintToast?.classList.remove("visible"), 5000);
+
+		gsap.killTweensOf(this.introOverlay.dom.container);
+		if (this.introOverlay.dom.loadingCaption) gsap.killTweensOf(this.introOverlay.dom.loadingCaption);
+		if (this.introOverlay.dom.developerAttribution) gsap.killTweensOf(this.introOverlay.dom.developerAttribution);
+
+		gsap.to(this.introOverlay.dom.container, {
+			opacity: 0,
+			duration: 0.3,
+			onComplete: () => {
+				this.introOverlay.dom.container.style.display = "none";
+			},
+		});
+
+		this.spotLight.intensity = this.settings.spotLightIntensity;
+		this.ambientLight.intensity = this.settings.ambientLightIntensity;
+
+		this.restoreCamera(400);
+		this.updateCursor();
+	}
 	}
 }

@@ -387,6 +387,22 @@ body {
 
 /* ==================== DEVELOPER ATTRIBUTION ==================== */
 
+.tap-skip-hint {
+	font-family: "Cinzel", serif;
+	font-size: 11px;
+	letter-spacing: 2px;
+	color: rgba(247, 223, 148, 0.75);
+	margin-top: 14px;
+	text-transform: uppercase;
+	animation: tapHintPulse 2s infinite ease-in-out;
+	cursor: pointer;
+}
+
+@keyframes tapHintPulse {
+	0%, 100% { opacity: 0.4; transform: scale(0.98); }
+	50% { opacity: 0.95; transform: scale(1.02); }
+}
+
 .developer-attribution {
 	position: absolute;
 	top: 90%;
