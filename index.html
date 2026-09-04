@@ -2,102 +2,67 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>The Book of Qbject</title>
+		<title>The Memories We Keep — A Teacher's Day Tribute</title>
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1.0, user-scalable=no"
 		/>
 
-		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="32x32"
-			href="/favicon-32x32.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="16x16"
-			href="/favicon-16x16.png"
-		/>
-		<link
-			rel="apple-touch-icon"
-			sizes="180x180"
-			href="/apple-touch-icon.png"
-		/>
+		<link rel="icon" type="image/svg+xml" href="/img/logo.svg" />
 
 		<meta
 			name="description"
-			content="Vadym Dovhun (Qbject) - Full Stack Developer: Projects, Skills, Interests. JS, React, Next, TypeScript, Tilwind, Python, PyQt, Electron."
+			content="An interactive 3D digital commemorative memory book dedicated to a beloved faculty teacher on Teacher's Day."
 		/>
-		<meta name="author" content="Vadym Dovhun" />
+		<meta name="author" content="Grateful Students" />
 
-		<meta property="og:title" content="The Book of Qbject" />
+		<!-- Open Graph / Social Sharing -->
+		<meta property="og:title" content="The Memories We Keep — A Teacher's Day Tribute" />
 		<meta
 			property="og:description"
-			content="Vadym Dovhun (Qbject) - Full Stack Developer: Projects, Skills, Interests. JS, React, Next, TypeScript, Tilwind, Python, PyQt, Electron."
+			content="An interactive 3D digital commemorative memory book celebrating a respected teacher and mentor."
 		/>
-		<meta
-			property="og:image"
-			content="https://qbject.github.io/tboq-assets/img/preview.jpg"
-		/>
-		<meta property="og:url" content="https://book.qbject.dev/" />
 		<meta property="og:type" content="website" />
 
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="The Book of Qbject" />
-		<meta
-			name="twitter:description"
-			content="Vadym Dovhun (Qbject) - Full Stack Developer: Projects, Skills, Interests. JS, React, Next, TypeScript, Tilwind, Python, PyQt, Electron."
+		<!-- Google Fonts for Academic Book Design -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap"
+			rel="stylesheet"
 		/>
-		<meta
-			name="twitter:image"
-			content="https://qbject.github.io/tboq-assets/img/preview.jpg"
-		/>
-
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "Person",
-				"name": "Vadym Dovhun",
-				"alternateName": "Qbject",
-				"url": "https://book.qbject.dev",
-				"image": "https://qbject.github.io/tboq-assets/img/photo.jpg",
-				"jobTitle": "Full Stack Developer",
-				"sameAs": [
-					"https://github.com/Qbject",
-					"https://www.upwork.com/freelancers/~01d961991b7e61979f",
-					"https://www.linkedin.com/in/vadym-dovhun"
-				]
-			}
-		</script>
 
 		<style>
-			/* instantly show the loading state */
-
+			/* Instant loading state */
 			body {
-				background-color: black;
+				background-color: #0c0a08;
+				margin: 0;
+				overflow: hidden;
+				font-family: "Inter", system-ui, sans-serif;
 			}
 
 			.intro-overlay {
 				position: absolute;
-				z-index: 1;
+				z-index: 10;
 				inset: 0;
+				background-color: #0b0907;
 				transition-property: background-color;
-				transition-duration: 800ms;
+				transition-duration: 900ms;
 				transition-timing-function: ease-in;
 			}
 
-			@keyframes loading {
+			@keyframes loadingPulse {
 				0% {
-					opacity: 0.2;
+					opacity: 0.4;
+					transform: translateX(-50%) translateY(-50%) scale(0.98);
 				}
 				50% {
-					opacity: 0.5;
+					opacity: 0.9;
+					transform: translateX(-50%) translateY(-50%) scale(1.02);
 				}
 				100% {
-					opacity: 0.2;
+					opacity: 0.4;
+					transform: translateX(-50%) translateY(-50%) scale(0.98);
 				}
 			}
 
@@ -114,12 +79,13 @@
 				top: 50%;
 				left: 50%;
 				transform: translateX(-50%) translateY(-50%);
-				width: 50%;
-				height: 50%;
-				animation: loading 2s infinite;
+				width: 48%;
+				height: 48%;
+				animation: loadingPulse 2.5s ease-in-out infinite;
 				user-select: none;
 				opacity: 0;
-				transition: opacity 400ms ease-out;
+				transition: opacity 500ms ease-out;
+				filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
 			}
 
 			.intro-overlay .centered-box > .logo-shine {
@@ -127,41 +93,57 @@
 				top: 50%;
 				left: 50%;
 				transform: translateX(-50%) translateY(-50%);
-				width: 170%;
-				height: 170%;
+				width: 180%;
+				height: 180%;
 				user-select: none;
 				opacity: 0;
 				transition:
-					opacity 750ms ease-out,
-					filter 750ms ease-out;
-				filter: brightness(1);
+					opacity 800ms ease-out,
+					filter 800ms ease-out;
+				filter: brightness(1.2);
 			}
 
-			@keyframes infiniteRotate {
+			@keyframes infiniteRotateSlow {
 				from {
-					rotate: 0deg;
+					transform: rotate(0deg);
 				}
 				to {
-					rotate: 360deg;
+					transform: rotate(360deg);
 				}
 			}
 
 			.intro-overlay .centered-box > .logo-shine > img {
 				width: 100%;
 				height: 100%;
-				animation: infiniteRotate 120s linear infinite;
+				animation: infiniteRotateSlow 160s linear infinite;
+			}
+
+			.intro-overlay .loading-caption {
+				position: absolute;
+				bottom: 22%;
+				left: 50%;
+				transform: translateX(-50%);
+				font-family: "Cinzel", serif;
+				font-size: 13px;
+				letter-spacing: 4px;
+				color: #d4af37;
+				text-transform: uppercase;
+				opacity: 0.85;
+				white-space: nowrap;
 			}
 
 			.intro-overlay .centered-box > .progress {
 				position: absolute;
-				bottom: 18%;
+				bottom: 16%;
 				left: 50%;
 				transform: translateX(-50%);
-				width: 35%;
+				width: 38%;
 				height: 3px;
-				background-color: rgba(255, 255, 255, 0.2);
+				background-color: rgba(212, 175, 55, 0.15);
+				border-radius: 2px;
+				overflow: hidden;
 				transition-property: opacity;
-				transition-duration: 500ms;
+				transition-duration: 600ms;
 				transition-timing-function: ease-out;
 			}
 
@@ -170,16 +152,15 @@
 				top: 0;
 				left: 0;
 				height: 100%;
-				width: 10%;
-				background-color: white;
+				width: 5%;
+				background: linear-gradient(90deg, #c5a059, #fde08b, #dfb76c);
 				will-change: width;
 				transition-property: width;
 				transition-duration: 400ms;
 				transition-timing-function: ease-out;
 				box-shadow:
-					0 0 10px rgba(255, 255, 255, 0.6),
-					0 0 20px rgba(255, 255, 255, 0.6),
-					0 0 30px rgba(255, 255, 255, 0.6);
+					0 0 12px rgba(223, 183, 108, 0.7),
+					0 0 25px rgba(223, 183, 108, 0.4);
 			}
 		</style>
 	</head>
@@ -188,19 +169,89 @@
 			<div class="intro-overlay">
 				<div class="centered-box">
 					<div class="logo-shine">
-						<img draggable="false" src="/img/logo-shine.png" />
+						<img draggable="false" src="/img/logo-shine.png" alt="Emblem shine" />
 					</div>
-					<img draggable="false" class="logo" src="/img/logo.svg" />
+					<img draggable="false" class="logo" src="/img/logo.svg" alt="Teacher's Day Tribute Crest" />
+					<div class="loading-caption">A Teacher's Day Tribute</div>
 					<div class="progress">
 						<div class="progress-inner"></div>
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<!-- Subtle Floating Minimal Navigation Dock -->
+		<nav class="book-nav-dock" id="book-nav-dock" aria-label="Book Navigation">
+			<button id="btn-prev" class="dock-btn" title="Previous Page (Left Arrow)" aria-label="Previous Page">
+				<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<polyline points="15 18 9 12 15 6"></polyline>
+				</svg>
+			</button>
+
+			<div class="spread-indicator" id="spread-indicator" title="Open Chapter Navigation">
+				<span class="spread-tag" id="spread-tag">Cover</span>
+				<span class="spread-title" id="spread-title">The Memories We Keep</span>
+			</div>
+
+			<button id="btn-next" class="dock-btn" title="Next Page (Right Arrow)" aria-label="Next Page">
+				<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<polyline points="9 18 15 12 9 6"></polyline>
+				</svg>
+			</button>
+
+			<div class="dock-separator"></div>
+
+			<button id="btn-toc" class="dock-btn" title="Table of Contents" aria-label="Table of Contents">
+				<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="8" y1="6" x2="21" y2="6"></line>
+					<line x1="8" y1="12" x2="21" y2="12"></line>
+					<line x1="8" y1="18" x2="21" y2="18"></line>
+					<line x1="3" y1="6" x2="3.01" y2="6"></line>
+					<line x1="3" y1="12" x2="3.01" y2="12"></line>
+					<line x1="3" y1="18" x2="3.01" y2="18"></line>
+				</svg>
+			</button>
+
+			<button id="btn-audio" class="dock-btn" title="Toggle Sound / Ambient Music" aria-label="Toggle Sound">
+				<svg id="icon-sound-on" class="sound-icon hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+					<path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+				</svg>
+				<svg id="icon-sound-off" class="sound-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+					<line x1="23" y1="9" x2="17" y2="15"></line>
+					<line x1="17" y1="9" x2="23" y2="15"></line>
+				</svg>
+			</button>
+
+			<button id="btn-fullscreen" class="dock-btn" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+				<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<polyline points="15 3 21 3 21 9"></polyline>
+					<polyline points="9 21 3 21 3 15"></polyline>
+					<line x1="21" y1="3" x2="14" y2="10"></line>
+					<line x1="3" y1="21" x2="10" y2="14"></line>
+				</svg>
+			</button>
+		</nav>
+
+		<!-- Table of Contents Modal Drawer -->
+		<div id="toc-drawer" class="toc-drawer hidden" aria-hidden="true">
+			<div class="toc-header">
+				<div class="toc-title">Table of Contents</div>
+				<button id="toc-close-btn" class="toc-close-btn" aria-label="Close Chapters">&times;</button>
+			</div>
+			<div class="toc-subtitle">The Memories We Keep • Commemorative Monograph</div>
+			<ul class="toc-list" id="toc-list">
+				<!-- Dynamically populated via main.ts -->
+			</ul>
+			<div class="toc-footer">Presented with gratitude on Teacher's Day</div>
+		</div>
+
+		<!-- User Interaction Hint Toast -->
+		<div id="hint-toast" class="hint-toast">
+			<span>✦ Drag or click pages to turn &nbsp;•&nbsp; Click photos to zoom in ✦</span>
+		</div>
+
 		<script type="module" src="/src/main.ts"></script>
-		<script
-			async
-			src="https://scripts.simpleanalyticscdn.com/latest.js"
-		></script>
 	</body>
 </html>

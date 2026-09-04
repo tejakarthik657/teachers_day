@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { gsap } from "gsap";
 import {
+	clamp,
 	lerpRectangles,
 	rotateY,
 	scaleRectangle,
@@ -38,8 +39,8 @@ export default class Flipbook {
 		spotLightX: 250,
 		spotLightY: 500,
 		spotLightZ: 1500,
-		spotLightColor: 0xffffff,
-		spotLightIntensity: 60,
+		spotLightColor: 0xfffaed,
+		spotLightIntensity: 65,
 		spotLightAngle: 0.7,
 		spotLightPenumbra: 0.6,
 		spotLightDecay: 0.4,
@@ -47,8 +48,8 @@ export default class Flipbook {
 		spotLightFarClip: 3500,
 		spotLightMapSize: 2048,
 
-		ambientLightColor: 0xffffff,
-		ambientLightIntensity: 0.35,
+		ambientLightColor: 0xfff4e6,
+		ambientLightIntensity: 0.38,
 
 		showSpotLightHelper: false,
 		showSpotShadowHelper: false,
@@ -94,6 +95,8 @@ export default class Flipbook {
 	private scriptProgressWeight = 0.4;
 
 	private introPhase: "LOADING" | "ANIMATING" | "COMPLETED" = "LOADING";
+	private onPageChangeListeners: ((page: number) => void)[] = [];
+	private lastNotifiedPage: number = 0;
 
 	constructor(params: FlipBookParams) {
 		this.containerEl = params.containerEl;
@@ -472,6 +475,12 @@ export default class Flipbook {
 							-this.cameraSideShift.getValue(),
 						);
 					}
+				}
+
+				const rounded = Math.round(progress);
+				if (rounded !== this.lastNotifiedPage) {
+					this.lastNotifiedPage = rounded;
+					this.onPageChangeListeners.forEach(cb => cb(rounded));
 				}
 			},
 		);
@@ -1088,6 +1097,66 @@ export default class Flipbook {
 		this.updateCursor();
 	}
 
+	public addPageChangeListener(callback: (page: number) => void): void {
+		this.onPageChangeListeners.push(callback);
+	}
+
+	public getCurrentProgress(): number {
+		return this.progress.getValue();
+	}
+
+	public getCurrentPage(): number {
+		return Math.round(this.progress.getValue());
+	}
+
+	public getTotalPages(): number {
+		return this.pages.length;
+	}
+
+	public async turnTo(target: number, duration = 1200): Promise<void> {
+		if (this.isTurning() && this.progress.locked) return;
+		const current = this.progress.getValue();
+		const clampedTarget = clamp(target, 0, this.pages.length);
+		if (Math.abs(current - clampedTarget) < 0.05) return;
+
+		this.progress.lock();
+		this.progress.setMin(Math.min(current, clampedTarget));
+		this.progress.setMax(Math.max(current, clampedTarget));
+
+		const animation = { progress: current };
+		return new Promise(resolve => {
+			gsap.to(animation, {
+				progress: clampedTarget,
+				duration: duration / 1000,
+				ease: "power2.inOut",
+				onUpdate: () => {
+					this.progress.setValue(animation.progress);
+				},
+				onComplete: () => {
+					this.progress.setValue(clampedTarget);
+					this.progress.release();
+					this.progress.setMin(-Infinity);
+					this.progress.setMax(Infinity);
+					resolve();
+				},
+			});
+		});
+	}
+
+	public async nextPage(): Promise<void> {
+		const current = Math.round(this.progress.getValue());
+		if (current < this.pages.length) {
+			await this.turnTo(current + 1);
+		}
+	}
+
+	public async prevPage(): Promise<void> {
+		const current = Math.round(this.progress.getValue());
+		if (current > 0) {
+			await this.turnTo(current - 1);
+		}
+	}
+
 	private async onBookClick(sceneMousePos: THREE.Vector2) {
 		if (!this.isChangingFocus) {
 			if (this.focusedActiveArea) {
@@ -1099,10 +1168,15 @@ export default class Flipbook {
 				if (area?.video) {
 					this.videoOverlay.open(area.video);
 					this.focusActiveArea(area, 1.125);
-				}
-
-				if (area?.zoom) {
+				} else if (area?.zoom) {
 					this.focusActiveArea(area, 1.05);
+				} else if (this.introPhase === "COMPLETED" && !this.isTurning()) {
+					// Natural click to flip pages
+					if (sceneMousePos.x > 0.15) {
+						this.nextPage();
+					} else if (sceneMousePos.x < -0.15) {
+						this.prevPage();
+					}
 				}
 			}
 		}

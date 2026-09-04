@@ -1,27 +1,324 @@
+:root {
+	--gold-primary: #d4af37;
+	--gold-light: #f5dc93;
+	--gold-dark: #8c6a28;
+	--bg-dark: #0d0b08;
+	--card-bg: rgba(18, 15, 12, 0.88);
+	--text-primary: #faf5ed;
+	--text-secondary: #c5b59b;
+	--border-gold: rgba(212, 175, 55, 0.35);
+}
+
+* {
+	box-sizing: border-box;
+}
+
 body {
+	margin: 0;
 	padding: 0;
 	overflow: hidden;
+	background-color: var(--bg-dark);
+	color: var(--text-primary);
+	font-family: "Inter", system-ui, -apple-system, sans-serif;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .flipbook-canvas {
 	position: absolute;
 	top: 0;
 	left: 0;
+	display: block;
 }
 
 .wrapper-link {
 	display: block;
+	width: 100vw;
+	height: 100vh;
 }
+
+/* ==================== FLOATING NAVIGATION DOCK ==================== */
+
+.book-nav-dock {
+	position: fixed;
+	bottom: 24px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 16px;
+	background: var(--card-bg);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border: 1px solid var(--border-gold);
+	border-radius: 40px;
+	box-shadow:
+		0 8px 32px rgba(0, 0, 0, 0.6),
+		0 0 16px rgba(212, 175, 55, 0.12);
+	transition: opacity 0.4s ease, transform 0.4s ease;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.book-nav-dock.visible {
+	opacity: 1;
+	pointer-events: all;
+}
+
+.dock-btn {
+	background: transparent;
+	border: none;
+	color: var(--text-secondary);
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.dock-btn:hover {
+	color: var(--gold-light);
+	background: rgba(212, 175, 55, 0.15);
+	transform: scale(1.05);
+}
+
+.dock-btn:active {
+	transform: scale(0.95);
+}
+
+.spread-indicator {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 2px 14px;
+	cursor: pointer;
+	border-radius: 8px;
+	transition: background 0.2s ease;
+}
+
+.spread-indicator:hover {
+	background: rgba(212, 175, 55, 0.08);
+}
+
+.spread-tag {
+	font-family: "Cinzel", serif;
+	font-size: 11px;
+	letter-spacing: 2px;
+	color: var(--gold-primary);
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+.spread-title {
+	font-family: "Cormorant Garamond", Georgia, serif;
+	font-size: 15px;
+	font-style: italic;
+	color: var(--text-primary);
+	white-space: nowrap;
+	max-width: 280px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.dock-separator {
+	width: 1px;
+	height: 22px;
+	background: rgba(212, 175, 55, 0.2);
+	margin: 0 4px;
+}
+
+.sound-icon.hidden {
+	display: none;
+}
+
+/* ==================== TABLE OF CONTENTS DRAWER ==================== */
+
+.toc-drawer {
+	position: fixed;
+	bottom: 84px;
+	left: 50%;
+	transform: translateX(-50%) scale(1);
+	z-index: 6;
+	width: 90vw;
+	max-width: 440px;
+	max-height: 75vh;
+	background: rgba(15, 12, 9, 0.95);
+	backdrop-filter: blur(25px);
+	-webkit-backdrop-filter: blur(25px);
+	border: 1px solid var(--border-gold);
+	border-radius: 16px;
+	box-shadow:
+		0 16px 48px rgba(0, 0, 0, 0.8),
+		0 0 24px rgba(212, 175, 55, 0.15);
+	padding: 22px;
+	display: flex;
+	flex-direction: column;
+	transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	overflow: hidden;
+}
+
+.toc-drawer.hidden {
+	opacity: 0;
+	pointer-events: none;
+	transform: translateX(-50%) scale(0.95);
+}
+
+.toc-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+	padding-bottom: 12px;
+}
+
+.toc-title {
+	font-family: "Cinzel", serif;
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: 3px;
+	color: var(--gold-primary);
+	text-transform: uppercase;
+}
+
+.toc-close-btn {
+	background: transparent;
+	border: none;
+	color: var(--text-secondary);
+	font-size: 26px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0 4px;
+}
+
+.toc-close-btn:hover {
+	color: var(--gold-light);
+}
+
+.toc-subtitle {
+	font-family: "Cormorant Garamond", serif;
+	font-style: italic;
+	font-size: 14px;
+	color: var(--text-secondary);
+	margin-top: 8px;
+	margin-bottom: 14px;
+}
+
+.toc-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+	max-height: 50vh;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.toc-list::-webkit-scrollbar {
+	width: 4px;
+}
+
+.toc-list::-webkit-scrollbar-thumb {
+	background: var(--border-gold);
+	border-radius: 4px;
+}
+
+.toc-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 14px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background 0.15s ease, color 0.15s ease;
+	border: 1px solid transparent;
+}
+
+.toc-item:hover {
+	background: rgba(212, 175, 55, 0.1);
+	border-color: rgba(212, 175, 55, 0.25);
+}
+
+.toc-item.active {
+	background: rgba(212, 175, 55, 0.16);
+	border-color: var(--gold-primary);
+}
+
+.toc-item-title {
+	font-family: "Cormorant Garamond", Georgia, serif;
+	font-size: 17px;
+	color: var(--text-primary);
+}
+
+.toc-item.active .toc-item-title {
+	color: var(--gold-light);
+	font-weight: 600;
+}
+
+.toc-item-page {
+	font-family: "Cinzel", serif;
+	font-size: 11px;
+	letter-spacing: 1.5px;
+	color: var(--gold-primary);
+}
+
+.toc-footer {
+	text-align: center;
+	margin-top: 14px;
+	padding-top: 10px;
+	border-top: 1px solid rgba(212, 175, 55, 0.15);
+	font-size: 11px;
+	letter-spacing: 1.5px;
+	font-family: "Cinzel", serif;
+	color: var(--gold-dark);
+	text-transform: uppercase;
+}
+
+/* ==================== HINT TOAST ==================== */
+
+.hint-toast {
+	position: fixed;
+	top: 24px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 4;
+	background: rgba(18, 14, 10, 0.78);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(212, 175, 55, 0.25);
+	padding: 8px 20px;
+	border-radius: 30px;
+	font-family: "Cinzel", serif;
+	font-size: 11px;
+	letter-spacing: 2px;
+	color: var(--gold-light);
+	opacity: 0;
+	transition: opacity 0.8s ease, transform 0.8s ease;
+	pointer-events: none;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.hint-toast.visible {
+	opacity: 0.9;
+	transform: translateX(-50%) translateY(0);
+}
+
+/* ==================== VIDEO OVERLAY (REUSED) ==================== */
 
 .video-overlay {
 	position: absolute;
-	z-index: 1;
+	z-index: 20;
 	inset: 0;
 	opacity: 0;
 	pointer-events: none;
-	transition-property: opacity;
-	transition-duration: 300ms;
-	transition-timing-function: ease-in;
+	transition: opacity 300ms ease-in;
 }
 
 .video-overlay.active {
@@ -37,9 +334,7 @@ body {
 	left: 50%;
 	z-index: 1;
 	transform: translateX(-50%) translateY(-50%) scale(0.965);
-	transition-property: transform, opacity;
-	transition-duration: 300ms;
-	transition-timing-function: ease-in;
+	transition: transform 300ms ease-in, opacity 300ms ease-in;
 	opacity: 0;
 	pointer-events: none;
 }
@@ -64,30 +359,54 @@ body {
 .video-overlay .backdrop {
 	position: absolute;
 	inset: 0;
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.7);
 }
 
 .video-overlay .closeBtn {
 	position: absolute;
-	top: 0;
-	right: 0;
-	width: 96px;
-	height: 96px;
-	box-sizing: border-box;
+	top: 16px;
+	right: 16px;
+	width: 48px;
+	height: 48px;
 	background-color: transparent;
-	border: 0;
+	border: none;
 	cursor: pointer;
-	opacity: 0.5;
+	opacity: 0.7;
 	z-index: 2;
-	transition-property: opacity;
-	transition-duration: 300ms;
-	transition-timing-function: ease-out;
-	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><defs><filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="1" flood-color="rgba(0,0,0,0.75)" /></filter></defs><g filter="url(%23shadow)"><line x1="8" y1="8" x2="40" y2="40" stroke="white" stroke-width="1.5" /><line x1="40" y1="8" x2="8" y2="40" stroke="white" stroke-width="1.5" /></g></svg>');
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 70%;
+	color: white;
+	font-size: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: opacity 200ms ease;
 }
 
 .video-overlay .closeBtn:hover {
 	opacity: 1;
+}
+
+/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
+
+@media (max-width: 600px) {
+	.book-nav-dock {
+		bottom: 16px;
+		padding: 6px 12px;
+		gap: 4px;
+	}
+
+	.spread-title {
+		max-width: 140px;
+		font-size: 13px;
+	}
+
+	.spread-tag {
+		font-size: 10px;
+	}
+
+	.hint-toast {
+		font-size: 10px;
+		letter-spacing: 1px;
+		padding: 6px 14px;
+		top: 14px;
+	}
 }

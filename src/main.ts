@@ -1,5 +1,8 @@
 import "./style.css";
 import Flipbook from "./flipbook";
+import { bookContent } from "./data/book-content";
+import { PageRenderer } from "./services/page-renderer";
+import { audioService } from "./services/audio-service";
 
 declare global {
 	interface Window {
@@ -7,333 +10,386 @@ declare global {
 	}
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	const containerEl = document.getElementById("flipbook-container");
+interface ChapterSpread {
+	page: number;
+	tag: string;
+	title: string;
+}
 
-	const pageWidth = 764;
-	const pageHeight = 1080;
+const chapters: ChapterSpread[] = [
+	{ page: 0, tag: "Cover", title: "The Memories We Keep" },
+	{ page: 1, tag: "Spread 1", title: "Dedication & More Than a Teacher" },
+	{ page: 2, tag: "Spread 2", title: "Where It All Happened & Lessons We Carry" },
+	{ page: 3, tag: "Spread 3", title: "Moments We Remember & Words That Stayed" },
+	{ page: 4, tag: "Spread 4", title: "What You Left With Us & Class Album" },
+	{ page: 5, tag: "Spread 5", title: "From All of Us & Final Thank You" },
+	{ page: 6, tag: "Spread 6", title: "Commemorative Valediction" },
+	{ page: 7, tag: "Back", title: "Outside Back Cover" },
+];
+
+document.addEventListener("DOMContentLoaded", async () => {
+	const containerEl = document.getElementById("flipbook-container");
 	if (!containerEl) {
-		console.error("No container element found");
+		console.error("No flipbook container found");
 		return;
 	}
 
-	const baseUrl = "https://qbject.github.io/tboq-assets";
-	const _url = (path: string) => baseUrl + path;
+	const pageWidth = 764;
+	const pageHeight = 1080;
 
+	// Render all 14 pages dynamically on high-DPI canvas
+	const renderer = new PageRenderer(1528, 2160);
+	const renderedPages = await renderer.renderAllPages(bookContent);
+
+	// Zoom coordinates for interactive memory inspection
+	const pageActiveAreas: PageActiveArea[] = [
+		// Cover portrait
+		{
+			faceIndex: 0,
+			top: 480 / 2160,
+			left: 524 / 1528,
+			width: 480 / 1528,
+			height: 580 / 2160,
+			title: `View Portrait of ${bookContent.teacher.name}`,
+			zoom: {
+				top: 480 / 2160,
+				left: 524 / 1528,
+				width: 480 / 1528,
+				height: 580 / 2160,
+			},
+		},
+		// Page 2: More Than a Teacher portrait
+		{
+			faceIndex: 2,
+			top: 350 / 2160,
+			left: 788 / 1528,
+			width: 600 / 1528,
+			height: 750 / 2160,
+			title: "View Faculty Portrait & Reflections",
+			zoom: {
+				top: 350 / 2160,
+				left: 788 / 1528,
+				width: 600 / 1528,
+				height: 750 / 2160,
+			},
+		},
+		// Page 3: Lecture hall photo
+		{
+			faceIndex: 3,
+			top: 460 / 2160,
+			left: 140 / 1528,
+			width: 1248 / 1528,
+			height: 620 / 2160,
+			title: "View Lecture Hall Memory",
+			zoom: {
+				top: 460 / 2160,
+				left: 140 / 1528,
+				width: 1248 / 1528,
+				height: 620 / 2160,
+			},
+		},
+		// Page 3: Seminar discussions
+		{
+			faceIndex: 3,
+			top: 1180 / 2160,
+			left: 140 / 1528,
+			width: 1248 / 1528,
+			height: 620 / 2160,
+			title: "View Seminar Discussion",
+			zoom: {
+				top: 1180 / 2160,
+				left: 140 / 1528,
+				width: 1248 / 1528,
+				height: 620 / 2160,
+			},
+		},
+		// Page 5: Campus conversations photo
+		{
+			faceIndex: 5,
+			top: 360 / 2160,
+			left: 140 / 1528,
+			width: 1248 / 1528,
+			height: 740 / 2160,
+			title: "View Campus Moments",
+			zoom: {
+				top: 360 / 2160,
+				left: 140 / 1528,
+				width: 1248 / 1528,
+				height: 740 / 2160,
+			},
+		},
+		// Page 5: Shared laughter
+		{
+			faceIndex: 5,
+			top: 1170 / 2160,
+			left: 140 / 1528,
+			width: 594 / 1528,
+			height: 680 / 2160,
+			title: "View Shared Laughter",
+			zoom: {
+				top: 1170 / 2160,
+				left: 140 / 1528,
+				width: 594 / 1528,
+				height: 680 / 2160,
+			},
+		},
+		// Page 5: Breakthrough moments
+		{
+			faceIndex: 5,
+			top: 1170 / 2160,
+			left: 794 / 1528,
+			width: 594 / 1528,
+			height: 680 / 2160,
+			title: "View Breakthrough Moment",
+			zoom: {
+				top: 1170 / 2160,
+				left: 794 / 1528,
+				width: 594 / 1528,
+				height: 680 / 2160,
+			},
+		},
+		// Page 7: Mentorship photo
+		{
+			faceIndex: 7,
+			top: 380 / 2160,
+			left: 868 / 1528,
+			width: 520 / 1528,
+			height: 680 / 2160,
+			title: "View Mentorship Memory",
+			zoom: {
+				top: 380 / 2160,
+				left: 868 / 1528,
+				width: 520 / 1528,
+				height: 680 / 2160,
+			},
+		},
+		// Page 8: Class photo album
+		{
+			faceIndex: 8,
+			top: 360 / 2160,
+			left: 140 / 1528,
+			width: 1248 / 1528,
+			height: 820 / 2160,
+			title: "View Class Graduation Album",
+			zoom: {
+				top: 360 / 2160,
+				left: 140 / 1528,
+				width: 1248 / 1528,
+				height: 820 / 2160,
+			},
+		},
+		// Page 10: Final Thank You portrait
+		{
+			faceIndex: 10,
+			top: 410 / 2160,
+			left: 494 / 1528,
+			width: 540 / 1528,
+			height: 680 / 2160,
+			title: "View Tribute Portrait",
+			zoom: {
+				top: 410 / 2160,
+				left: 494 / 1528,
+				width: 540 / 1528,
+				height: 680 / 2160,
+			},
+		},
+	];
+
+	// Initialize Flipbook engine
 	window.flipbook = new Flipbook({
 		containerEl,
 		textureUrls: {
-			pages: [
-				_url("/img/pages/cover-front.jpg"),
-				_url("/img/pages/welcome.jpg"),
-				_url("/img/pages/about.jpg"),
-				_url("/img/pages/who-am-i.jpg"),
-				_url("/img/pages/my-story.jpg"),
-				_url("/img/pages/skills.jpg"),
-				_url("/img/pages/interests.jpg"),
-				_url("/img/pages/blank.jpg"),
-				_url("/img/pages/journey.jpg"),
-				_url("/img/pages/map-1.jpg"),
-				_url("/img/pages/map-2.jpg"),
-				_url("/img/pages/blank.jpg"),
-				_url("/img/pages/career.jpg"),
-				_url("/img/pages/thor-systems.jpg"),
-				_url("/img/pages/thor-systems-2.jpg"),
-				_url("/img/pages/freelance.jpg"),
-				_url("/img/pages/freelance-2.jpg"),
-				_url("/img/pages/blank.jpg"),
-				_url("/img/pages/projects.jpg"),
-				_url("/img/pages/qyou.jpg"),
-				_url("/img/pages/qyou-2.jpg"),
-				_url("/img/pages/iq-tester.jpg"),
-				_url("/img/pages/betting-tarot.jpg"),
-				_url("/img/pages/autoposter.jpg"),
-				_url("/img/pages/autoposter-2.jpg"),
-				_url("/img/pages/export-robot.jpg"),
-				_url("/img/pages/six-dot-bot.jpg"),
-				_url("/img/pages/autoreply.jpg"),
-				_url("/img/pages/time-recorder.jpg"),
-				_url("/img/pages/fifteen-js.jpg"),
-				_url("/img/pages/the-book.jpg"),
-				_url("/img/pages/cover-back.jpg"),
-			],
-			spineInner: _url("/img/pages/spine.jpg"),
-			spineOuter: _url("/img/pages/spine.jpg"),
-			coverEdgeTB: _url("/img/pages/cover-edge-tb.jpg"),
-			coverEdgeLR: _url("/img/pages/cover-edge-lr.jpg"),
-			spineEdgeTB: _url("/img/pages/spine-edge-tb.jpg"),
-			spineEdgeLR: _url("/img/pages/cover-edge-tb.jpg"),
-			desk: _url("/img/desk.jpg"),
+			pages: renderedPages,
+			spineInner: "/images/textures/spine.jpg",
+			spineOuter: "/images/textures/spine.jpg",
+			coverEdgeTB: "/images/textures/cover-edge-tb.jpg",
+			coverEdgeLR: "/images/textures/cover-edge-lr.jpg",
+			spineEdgeTB: "/images/textures/spine-edge-tb.jpg",
+			spineEdgeLR: "/images/textures/cover-edge-tb.jpg",
+			desk: "/images/textures/desk.jpg",
 		},
-		pageEdgeColor: 0xb1a283,
+		pageEdgeColor: 0xd6c29b,
 		pageWidth,
 		pageHeight,
 		coverThickness: 5,
-		pageRootThickness: 5,
-		pageThickness: 1,
+		pageRootThickness: 4,
+		pageThickness: 1.5,
 		coverMarginX: 8,
 		coverMarginY: 10,
-		pageActiveAreas: [
-			{
-				faceIndex: 3,
-				link: "https://github.com/Qbject",
-				top: 211 / pageHeight,
-				left: 68 / pageWidth,
-				width: 100 / pageWidth,
-				height: 100 / pageHeight,
-				title: "GitHub",
-			},
-			{
-				faceIndex: 3,
-				// simple spam crawler protection
-				link: () =>
-					atob(
-						"=02bj5CbpFWbnBkb1hmdvRmLtlHZhZnOvRHbpFWb"
-							.split("")
-							.reverse()
-							.join(""),
-					),
-				top: 420 / pageHeight,
-				left: 68 / pageWidth,
-				width: 100 / pageWidth,
-				height: 100 / pageHeight,
-				title: "E-Mail",
-			},
-			{
-				faceIndex: 3,
-				link: "https://www.upwork.com/freelancers/~01d961991b7e61979f",
-				top: 211 / pageHeight,
-				left: 591 / pageWidth,
-				width: 100 / pageWidth,
-				height: 100 / pageHeight,
-				title: "Upwork",
-			},
-			{
-				faceIndex: 3,
-				link: "https://www.linkedin.com/in/vadym-dovhun",
-				top: 420 / pageHeight,
-				left: 591 / pageWidth,
-				width: 100 / pageWidth,
-				height: 100 / pageHeight,
-				title: "LinkedIn",
-			},
-			{
-				faceIndex: 13,
-				link: "https://thorsystems.ru/",
-				top: 152 / pageHeight,
-				left: 50 / pageWidth,
-				width: 160 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 16,
-				link: "https://www.upwork.com/freelancers/~01d961991b7e61979f",
-				top: 264 / pageHeight,
-				left: 400 / pageWidth,
-				width: 190 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 18,
-				link: "https://github.com/Qbject",
-				top: 820 / pageHeight,
-				left: 365 / pageWidth,
-				width: 115 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 21,
-				link: "https://github.com/Qbject/iq-tester",
-				top: 313 / pageHeight,
-				left: 131 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 21,
-				link: "https://www.whatsmyiq.online/",
-				top: 313 / pageHeight,
-				left: 288 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 25,
-				link: "https://github.com/Qbject/exportrobot",
-				top: 313 / pageHeight,
-				left: 131 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 26,
-				link: "https://github.com/Qbject/six-dot-bot",
-				top: 313 / pageHeight,
-				left: 131 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 26,
-				link: "https://t.me/sixdotbot",
-				top: 313 / pageHeight,
-				left: 288 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 27,
-				link: "https://github.com/Qbject/autoreply",
-				top: 313 / pageHeight,
-				left: 131 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 29,
-				link: "https://github.com/Qbject/the-game-of-fifteen",
-				top: 274 / pageHeight,
-				left: 131 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 29,
-				link: "https://qbject.github.io/the-game-of-fifteen/",
-				top: 274 / pageHeight,
-				left: 288 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 30,
-				link: "https://github.com/Qbject/the-book-of-qbject",
-				top: 351 / pageHeight,
-				left: 131 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 30,
-				link: ".",
-				top: 351 / pageHeight,
-				left: 288 / pageWidth,
-				width: 143 / pageWidth,
-				height: 50 / pageHeight,
-			},
-			{
-				faceIndex: 19,
-				video: _url("/video/qyou-demo.mp4"),
-				top: 364 / pageHeight,
-				left: 75 / pageWidth,
-				width: 615 / pageWidth,
-				height: 416 / pageHeight,
-				title: "Watch qYou usage and features",
-			},
-			{
-				faceIndex: 21,
-				video: _url("/video/iq-tester-demo.mp4"),
-				top: 399 / pageHeight,
-				left: 50 / pageWidth,
-				width: 664 / pageWidth,
-				height: 365 / pageHeight,
-				title: "Watch IQ Tester usage and features",
-			},
-			{
-				faceIndex: 22,
-				video: _url("/video/betting-tarot-demo.mp4"),
-				top: 302 / pageHeight,
-				left: 79 / pageWidth,
-				width: 606 / pageWidth,
-				height: 540 / pageHeight,
-				title: "Watch Betting Tarot usage and features",
-			},
-			{
-				faceIndex: 25,
-				video: _url("/video/exportrobot-demo-saving.mp4"),
-				top: 432 / pageHeight,
-				left: 362 / pageWidth,
-				width: 351 / pageWidth,
-				height: 305 / pageHeight,
-				title: "Watch how ExportRobot saves messages",
-			},
-			{
-				faceIndex: 25,
-				video: _url("/video/exportrobot-demo-browser.mp4"),
-				top: 761 / pageHeight,
-				left: 362 / pageWidth,
-				width: 351 / pageWidth,
-				height: 269 / pageHeight,
-				title: "Watch how exported messages look in a browser",
-			},
-			{
-				faceIndex: 26,
-				video: _url("/video/six-dot-bot-demo.mp4"),
-				top: 402 / pageHeight,
-				left: 360 / pageWidth,
-				width: 354 / pageWidth,
-				height: 628 / pageHeight,
-				title: "Watch Six Dot Bot usage and features",
-			},
-			{
-				faceIndex: 27,
-				video: _url("/video/autoreply-demo.mp4"),
-				top: 410 / pageHeight,
-				left: 50 / pageWidth,
-				width: 664 / pageWidth,
-				height: 354 / pageHeight,
-				title: "Watch Autoreply configuration, usage and features",
-			},
-			{
-				faceIndex: 28,
-				video: _url("/video/time-recorder-demo.mp4"),
-				top: 291 / pageHeight,
-				left: 180 / pageWidth,
-				width: 404 / pageWidth,
-				height: 406 / pageHeight,
-				title: "Watch Time Recorder usage and features",
-			},
-			{
-				faceIndex: 29,
-				video: _url("/video/fifteen-js-demo.mp4"),
-				top: 365 / pageHeight,
-				left: 99 / pageWidth,
-				width: 567 / pageWidth,
-				height: 629 / pageHeight,
-				title: "Watch Fifteen.js usage and features",
-			},
-			{
-				faceIndex: 30,
-				video: _url("/video/the-book-demo.mp4"),
-				top: 351 / pageHeight,
-				left: 126 / pageWidth,
-				width: 505 / pageWidth,
-				height: 283 / pageHeight,
-				title: "Watch The Book while watching The Book",
-			},
-			{
-				faceIndex: 30,
-				video: _url("/video/the-book-bloopers.mp4"),
-				top: 742 / pageHeight,
-				left: 126 / pageWidth,
-				width: 505 / pageWidth,
-				height: 280 / pageHeight,
-				title: "It was quite an experience :)",
-			},
-			{
-				faceIndex: 5,
-				zoom: {
-					top: 187 / pageHeight,
-					left: 47 / pageWidth,
-					width: 668 / pageWidth,
-					height: 668 / pageHeight,
-				},
-				top: 0,
-				left: 0,
-				width: 1,
-				height: 1,
-				preserveDefaultCursor: true,
-			},
-		],
+		pageActiveAreas,
 	});
+
+	// Setup Navigation Dock & UI
+	setupUserInterface(window.flipbook);
 });
+
+function setupUserInterface(flipbook: Flipbook): void {
+	const navDock = document.getElementById("book-nav-dock");
+	const btnPrev = document.getElementById("btn-prev");
+	const btnNext = document.getElementById("btn-next");
+	const btnToc = document.getElementById("btn-toc");
+	const btnAudio = document.getElementById("btn-audio");
+	const btnFullscreen = document.getElementById("btn-fullscreen");
+	const spreadTag = document.getElementById("spread-tag");
+	const spreadTitle = document.getElementById("spread-title");
+	const spreadIndicator = document.getElementById("spread-indicator");
+	const tocDrawer = document.getElementById("toc-drawer");
+	const tocList = document.getElementById("toc-list");
+	const tocCloseBtn = document.getElementById("toc-close-btn");
+	const hintToast = document.getElementById("hint-toast");
+	const iconSoundOn = document.getElementById("icon-sound-on");
+	const iconSoundOff = document.getElementById("icon-sound-off");
+
+	// Update sound icons according to state
+	function updateSoundIcons(isMuted: boolean): void {
+		if (iconSoundOn && iconSoundOff) {
+			iconSoundOn.classList.toggle("hidden", isMuted);
+			iconSoundOff.classList.toggle("hidden", !isMuted);
+		}
+	}
+	updateSoundIcons(audioService.getMuted());
+
+	// Populate Table of Contents
+	if (tocList) {
+		tocList.innerHTML = "";
+		chapters.forEach(ch => {
+			const li = document.createElement("li");
+			li.className = `toc-item ${ch.page === 0 ? "active" : ""}`;
+			li.dataset.page = String(ch.page);
+			li.innerHTML = `
+				<span class="toc-item-title">${ch.title}</span>
+				<span class="toc-item-page">${ch.tag}</span>
+			`;
+			li.addEventListener("click", () => {
+				flipbook.turnTo(ch.page);
+				closeToc();
+			});
+			tocList.appendChild(li);
+		});
+	}
+
+	function updateSpreadUI(pageIndex: number): void {
+		const currentChapter =
+			chapters.find(ch => ch.page === pageIndex) ||
+			chapters[Math.min(pageIndex, chapters.length - 1)];
+
+		if (spreadTag && spreadTitle) {
+			spreadTag.textContent = currentChapter.tag;
+			spreadTitle.textContent = currentChapter.title;
+		}
+
+		if (tocList) {
+			tocList.querySelectorAll(".toc-item").forEach(item => {
+				const p = Number((item as HTMLElement).dataset.page);
+				item.classList.toggle("active", p === pageIndex);
+			});
+		}
+	}
+
+	// Flipbook page change listener
+	flipbook.addPageChangeListener(pageIndex => {
+		updateSpreadUI(pageIndex);
+		audioService.playPageTurnSound();
+	});
+
+	// Button actions
+	btnPrev?.addEventListener("click", e => {
+		e.stopPropagation();
+		flipbook.prevPage();
+	});
+
+	btnNext?.addEventListener("click", e => {
+		e.stopPropagation();
+		flipbook.nextPage();
+	});
+
+	btnAudio?.addEventListener("click", e => {
+		e.stopPropagation();
+		const isMuted = audioService.toggleMute();
+		updateSoundIcons(isMuted);
+	});
+
+	btnFullscreen?.addEventListener("click", e => {
+		e.stopPropagation();
+		toggleFullscreen();
+	});
+
+	function toggleToc(): void {
+		tocDrawer?.classList.toggle("hidden");
+	}
+
+	function closeToc(): void {
+		tocDrawer?.classList.add("hidden");
+	}
+
+	btnToc?.addEventListener("click", e => {
+		e.stopPropagation();
+		toggleToc();
+	});
+
+	spreadIndicator?.addEventListener("click", e => {
+		e.stopPropagation();
+		toggleToc();
+	});
+
+	tocCloseBtn?.addEventListener("click", e => {
+		e.stopPropagation();
+		closeToc();
+	});
+
+	document.addEventListener("click", e => {
+		if (
+			tocDrawer &&
+			!tocDrawer.classList.contains("hidden") &&
+			!tocDrawer.contains(e.target as Node) &&
+			!btnToc?.contains(e.target as Node)
+		) {
+			closeToc();
+		}
+	});
+
+	// Keyboard shortcuts
+	document.addEventListener("keydown", e => {
+		if (e.key === "ArrowLeft" || e.code === "ArrowLeft" || e.key === "a") {
+			flipbook.prevPage();
+		} else if (
+			e.key === "ArrowRight" ||
+			e.code === "ArrowRight" ||
+			e.key === "d" ||
+			e.key === " "
+		) {
+			flipbook.nextPage();
+		} else if (e.key === "Home") {
+			flipbook.turnTo(0);
+		} else if (e.key === "End") {
+			flipbook.turnTo(flipbook.getTotalPages());
+		} else if (e.key === "m" || e.key === "M") {
+			const isMuted = audioService.toggleMute();
+			updateSoundIcons(isMuted);
+		} else if (e.key === "Escape") {
+			closeToc();
+		}
+	});
+
+	// Show UI once intro completes
+	setTimeout(() => {
+		navDock?.classList.add("visible");
+		hintToast?.classList.add("visible");
+
+		setTimeout(() => {
+			hintToast?.classList.remove("visible");
+		}, 7000);
+	}, 4000);
+}
+
+function toggleFullscreen(): void {
+	if (!document.fullscreenElement) {
+		document.documentElement.requestFullscreen?.().catch(err => {
+			console.error("Fullscreen error", err);
+		});
+	} else {
+		document.exitFullscreen?.().catch(err => {
+			console.error("Exit fullscreen error", err);
+		});
+	}
+}
