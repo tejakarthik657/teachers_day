@@ -5,6 +5,8 @@ export default class IntroOverlay {
 		logoShine: HTMLImageElement;
 		progress: HTMLDivElement;
 		progressInner: HTMLDivElement;
+		loadingCaption: HTMLDivElement;
+		developerAttribution: HTMLDivElement;
 	};
 
 	constructor(container: HTMLDivElement) {
@@ -14,6 +16,8 @@ export default class IntroOverlay {
 			logoShine: container.querySelector(".logo-shine")!,
 			progress: container.querySelector(".progress")!,
 			progressInner: container.querySelector(".progress-inner")!,
+			loadingCaption: container.querySelector(".loading-caption")!,
+			developerAttribution: container.querySelector(".developer-attribution")!,
 		};
 	}
 

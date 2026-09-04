@@ -51,9 +51,10 @@ export default class Page {
 		const _texture = (url: string) => {
 			const texture = this.textureLoader.load(url);
 			texture.colorSpace = THREE.SRGBColorSpace;
-			texture.minFilter = THREE.LinearFilter;
-			texture.generateMipmaps = false;
-			// texture.anisotropy = 16;
+			texture.minFilter = THREE.LinearMipmapLinearFilter;
+			texture.magFilter = THREE.LinearFilter;
+			texture.generateMipmaps = true;
+			texture.anisotropy = 16;
 			return { map: texture, vertexColors: !this.isCover };
 		};
 		const _color = (hex: number) => ({
@@ -82,12 +83,32 @@ export default class Page {
 		}
 
 		const materials = [
-			new THREE.MeshStandardMaterial(textures.back),
-			new THREE.MeshStandardMaterial(textures.front),
-			new THREE.MeshStandardMaterial(textures.edgeTop),
-			new THREE.MeshStandardMaterial(textures.edgeBottom),
-			new THREE.MeshStandardMaterial(textures.edgeRight),
-			new THREE.MeshStandardMaterial(textures.edgeLeft),
+			new THREE.MeshStandardMaterial({
+				...textures.back,
+				roughness: this.isCover ? 0.45 : 0.9,
+				metalness: this.isCover ? 0.2 : 0.02,
+			}),
+			new THREE.MeshStandardMaterial({
+				...textures.front,
+				roughness: this.isCover ? 0.45 : 0.9,
+				metalness: this.isCover ? 0.2 : 0.02,
+			}),
+			new THREE.MeshStandardMaterial({
+				...textures.edgeTop,
+				roughness: 0.8,
+			}),
+			new THREE.MeshStandardMaterial({
+				...textures.edgeBottom,
+				roughness: 0.8,
+			}),
+			new THREE.MeshStandardMaterial({
+				...textures.edgeRight,
+				roughness: 0.8,
+			}),
+			new THREE.MeshStandardMaterial({
+				...textures.edgeLeft,
+				roughness: 0.8,
+			}),
 		];
 
 		const geometry = new THREE.BoxGeometry(

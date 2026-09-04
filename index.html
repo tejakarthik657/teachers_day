@@ -24,11 +24,11 @@
 		/>
 		<meta property="og:type" content="website" />
 
-		<!-- Google Fonts for Academic Book Design -->
+		<!-- Google Fonts for Harry Potter & Magical Monograph Design -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Almendra:ital,wght@0,700;1,700&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@400;600;700&family=MedievalSharp&family=Uncial+Antiqua&display=swap"
 			rel="stylesheet"
 		/>
 
@@ -76,11 +76,11 @@
 
 			.intro-overlay .centered-box > .logo {
 				position: absolute;
-				top: 50%;
+				top: 42%;
 				left: 50%;
 				transform: translateX(-50%) translateY(-50%);
-				width: 48%;
-				height: 48%;
+				width: 40%;
+				height: 40%;
 				animation: loadingPulse 2.5s ease-in-out infinite;
 				user-select: none;
 				opacity: 0;
@@ -90,11 +90,11 @@
 
 			.intro-overlay .centered-box > .logo-shine {
 				position: absolute;
-				top: 50%;
+				top: 42%;
 				left: 50%;
 				transform: translateX(-50%) translateY(-50%);
-				width: 180%;
-				height: 180%;
+				width: 160%;
+				height: 160%;
 				user-select: none;
 				opacity: 0;
 				transition:
@@ -120,21 +120,33 @@
 
 			.intro-overlay .loading-caption {
 				position: absolute;
-				bottom: 22%;
+				top: 76%;
 				left: 50%;
-				transform: translateX(-50%);
-				font-family: "Cinzel", serif;
-				font-size: 13px;
-				letter-spacing: 4px;
-				color: #d4af37;
+				transform: translate(-50%, -50%) scale(1);
+				font-family: "Cinzel Decorative", "MedievalSharp", "Cinzel", serif;
+				font-size: 17px;
+				font-weight: 700;
+				letter-spacing: 5px;
+				color: #f7df94;
 				text-transform: uppercase;
-				opacity: 0.85;
+				opacity: 0.9;
 				white-space: nowrap;
+				text-shadow: 0 0 14px rgba(212, 175, 55, 0.7), 0 0 28px rgba(212, 175, 55, 0.4);
+				transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), top 1.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 1.6s ease-out;
+				will-change: transform, top, opacity, filter;
+			}
+
+			.intro-overlay .loading-caption.zoom-in {
+				top: 50%;
+				transform: translate(-50%, -50%) scale(2.0);
+				opacity: 1;
+				color: #ffffff;
+				text-shadow: 0 0 25px rgba(253, 224, 139, 1), 0 0 50px rgba(212, 175, 55, 0.95), 0 0 90px rgba(212, 175, 55, 0.7);
 			}
 
 			.intro-overlay .centered-box > .progress {
 				position: absolute;
-				bottom: 16%;
+				top: 86%;
 				left: 50%;
 				transform: translateX(-50%);
 				width: 38%;
@@ -171,11 +183,16 @@
 					<div class="logo-shine">
 						<img draggable="false" src="/img/logo-shine.png" alt="Emblem shine" />
 					</div>
-					<img draggable="false" class="logo" src="/img/logo.svg" alt="Teacher's Day Tribute Crest" />
-					<div class="loading-caption">A Teacher's Day Tribute</div>
+					<img draggable="false" class="logo" src="/img/csea-logo.png" alt="CSEA Tribute Logo" />
+					<div class="loading-caption">CSEA • A Teacher's Day Tribute</div>
 					<div class="progress">
 						<div class="progress-inner"></div>
 					</div>
+				</div>
+				<div class="developer-attribution" id="developer-attribution">
+					<span class="dev-by-text">DEVELOPED BY</span>
+					<span class="dev-name-text">DEVFRAMES</span>
+					<img src="/img/developer-logo.png" alt="Devframes Logo" class="developer-logo-img" />
 				</div>
 			</div>
 		</div>
@@ -232,6 +249,13 @@
 					<line x1="3" y1="21" x2="10" y2="14"></line>
 				</svg>
 			</button>
+
+			<div class="dock-separator"></div>
+
+			<a href="https://devframes.vercel.app/" target="_blank" rel="noopener noreferrer" class="dock-dev-badge" id="dock-dev-badge" title="Visit Devframes (https://devframes.vercel.app/)">
+				<span class="dev-label">DEVFRAMES</span>
+				<img src="/img/developer-logo.png" alt="Devframes Logo" class="dock-dev-img" />
+			</a>
 		</nav>
 
 		<!-- Table of Contents Modal Drawer -->

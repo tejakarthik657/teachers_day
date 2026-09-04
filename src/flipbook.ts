@@ -148,12 +148,13 @@ export default class Flipbook {
 			9000,
 		);
 
-		this.renderer = new THREE.WebGLRenderer();
-		// this.renderer = new THREE.WebGLRenderer({ antialias: true });
+		this.renderer = new THREE.WebGLRenderer({
+			antialias: true,
+			powerPreference: "high-performance",
+			alpha: true,
+		});
 		this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-		// this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-		// this.renderer.toneMappingExposure = 1.2;
-		this.renderer.setPixelRatio(window.devicePixelRatio);
+		this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.shadowMap.enabled = true;
 		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -1218,24 +1219,6 @@ export default class Flipbook {
 			});
 		};
 
-		const openFirstPage = async (durationMs: number) => {
-			const animation = { progress: 0 };
-			this.progress.lock();
-			this.progress.setMin(0);
-			this.progress.setMax(1);
-			await gsap.to(animation, {
-				progress: 1,
-				duration: durationMs / 1000,
-				ease: "power2.inOut",
-				onUpdate: () => {
-					this.progress.setValue(animation.progress);
-				},
-				onComplete: () => {
-					this.progress.release();
-				},
-			});
-		};
-
 		const transitionRaise = async (durationMs: number) => {
 			// temporarily apply bottom view settings and gradually raise to
 			// the base position
@@ -1348,10 +1331,10 @@ export default class Flipbook {
 
 		// prepare camera for intro animation
 		const logoArea: PageArea = {
-			top: 582.5 / this.pageHeight,
-			left: 279 / this.pageWidth,
-			width: 204 / this.pageWidth,
-			height: 204 / this.pageHeight,
+			top: 620 / this.pageHeight,
+			left: 524 / this.pageWidth,
+			width: 480 / this.pageWidth,
+			height: 480 / this.pageHeight,
 		};
 		const logoCorners = scaleRectangle(
 			this.pages[0].getPageAreaCorners(logoArea),
@@ -1364,18 +1347,53 @@ export default class Flipbook {
 
 		this.introOverlay.dom.progress.style.opacity = "0";
 
-		await sleep(200); // make sure all the hard work is done
+		const animateCaptionZoom = async (durationMs: number) => {
+			const captionEl = this.introOverlay.dom.loadingCaption;
+			if (!captionEl) return;
+
+			captionEl.classList.add("zoom-in");
+			await sleep(durationMs);
+
+			gsap.to(captionEl, {
+				opacity: 0,
+				duration: 0.8,
+				ease: "power2.in",
+			});
+			await sleep(800);
+		};
+
+		const animateDevframesZoom = async (durationMs: number) => {
+			const devEl = this.introOverlay.dom.developerAttribution;
+			if (!devEl) return;
+
+			devEl.classList.add("zoom-in");
+			await sleep(durationMs);
+
+			gsap.to(devEl, {
+				opacity: 0,
+				duration: 0.8,
+				ease: "power2.in",
+			});
+			await sleep(800);
+		};
 
 		animateLightFlash(2500);
 		await animateLogoFlash(2500);
-		transitionToBottomView(3000);
-		await sleep(2000);
-		openFirstPage(3500);
-		await sleep(1000);
-		await transitionRaise(4000);
+		await animateCaptionZoom(2200);
+		await animateDevframesZoom(2200);
+
+		transitionToBottomView(2500);
+		await sleep(1500);
+		await transitionRaise(2500);
 
 		// finalize
-		this.introOverlay.dom.container.style.display = "none";
+		gsap.to(this.introOverlay.dom.container, {
+			opacity: 0,
+			duration: 0.8,
+			onComplete: () => {
+				this.introOverlay.dom.container.style.display = "none";
+			},
+		});
 		this.updateCursor();
 		this.introPhase = "COMPLETED";
 	}

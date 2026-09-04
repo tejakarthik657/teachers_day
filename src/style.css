@@ -385,6 +385,95 @@ body {
 	opacity: 1;
 }
 
+/* ==================== DEVELOPER ATTRIBUTION ==================== */
+
+.developer-attribution {
+	position: absolute;
+	top: 90%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(1);
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-family: "Cinzel Decorative", "Cinzel", serif;
+	font-size: 14px;
+	letter-spacing: 3px;
+	color: #f7df94;
+	text-transform: uppercase;
+	z-index: 12;
+	opacity: 0.85;
+	white-space: nowrap;
+	text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+	transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), top 1.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 1.6s ease-out;
+	will-change: transform, top, opacity;
+}
+
+.developer-attribution .dev-by-text {
+	font-family: "Cinzel", serif;
+	font-size: 13px;
+	letter-spacing: 4px;
+	color: rgba(247, 223, 148, 0.85);
+	font-weight: 600;
+}
+
+.developer-attribution .dev-name-text {
+	font-family: "Cinzel Decorative", "MedievalSharp", serif;
+	font-size: 18px;
+	letter-spacing: 4px;
+	color: #ffffff;
+	font-weight: 900;
+	text-shadow: 0 0 15px rgba(253, 224, 139, 0.9);
+}
+
+.developer-logo-img {
+	height: 38px;
+	width: auto;
+	object-fit: contain;
+	filter: drop-shadow(0 0 12px rgba(252, 211, 77, 0.7));
+}
+
+.developer-attribution.zoom-in {
+	top: 50%;
+	transform: translate(-50%, -50%) scale(1.8);
+	opacity: 1;
+	color: #ffffff;
+	text-shadow: 0 0 25px rgba(253, 224, 139, 1), 0 0 50px rgba(212, 175, 55, 0.95), 0 0 90px rgba(212, 175, 55, 0.7);
+}
+
+.dock-dev-badge {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 10px;
+	border-radius: 20px;
+	background: rgba(212, 175, 55, 0.12);
+	border: 1px solid rgba(212, 175, 55, 0.3);
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.25s ease;
+}
+
+.dock-dev-badge:hover {
+	background: rgba(212, 175, 55, 0.28);
+	border-color: rgba(212, 175, 55, 0.7);
+	transform: translateY(-1px) scale(1.04);
+	box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+}
+
+.dev-label {
+	font-family: "Cinzel", serif;
+	font-size: 10px;
+	letter-spacing: 1.5px;
+	color: var(--gold-primary);
+	font-weight: 700;
+}
+
+.dock-dev-img {
+	height: 24px;
+	width: auto;
+	object-fit: contain;
+}
+
 /* ==================== RESPONSIVE ADJUSTMENTS ==================== */
 
 @media (max-width: 600px) {
@@ -410,3 +499,4 @@ body {
 		top: 14px;
 	}
 }
+

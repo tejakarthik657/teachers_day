@@ -18,6 +18,11 @@ export interface BookContent {
 		exLibris: string;
 		heading: string;
 		body: string;
+		objectives: Array<{
+			number: string;
+			title: string;
+			description: string;
+		}>;
 		presentedTo: string;
 		presentedBy: string;
 	};
@@ -73,7 +78,10 @@ export interface BookContent {
 			trait: string;
 			meaning: string;
 		}>;
-		imagePath: string;
+		imagePath1: string;
+		caption1: string;
+		imagePath2: string;
+		caption2: string;
 		sideNote: string;
 	};
 	page8: {
@@ -114,189 +122,209 @@ export interface BookContent {
 
 export const bookContent: BookContent = {
 	teacher: {
-		name: "[TEACHER NAME]",
-		honorific: "Professor",
-		designation: "[DESIGNATION]",
-		department: "[DEPARTMENT]",
-		institution: "[INSTITUTION]",
-		batch: "[BATCH / YEAR]",
+		name: "OUR BELOVED TEACHERS",
+		honorific: "Respected Professors & Mentors",
+		designation: "Faculty of Computer Science & Engineering",
+		department: "Department of Computer Science & Engineering",
+		institution: "CSEA — Computer Science & Engineering Association",
+		batch: "TEACHER'S DAY SPECIAL EDITION",
 	},
 	cover: {
 		title: "THE MEMORIES WE KEEP",
 		subtitle: "A TEACHER'S DAY TRIBUTE",
-		tagline: "Celebrating the teacher who made a difference.",
+		tagline: "Honoring the visionary mentors who light our path.",
 		greeting: "HAPPY TEACHER'S DAY",
-		imagePath: "/images/teacher/portrait.jpg",
+		imagePath: "/images/teacher/hod.jpg",
 	},
 	dedication: {
-		exLibris: "EX LIBRIS • COMMEMORATIVE EDITION",
-		heading: "In Grateful Dedication",
-		body: "Presented with the deepest admiration and enduring respect on the occasion of Teacher's Day.\n\nFor the countless hours invested, the quiet patience extended, and the unwavering conviction that every student could reach beyond their perceived limits.",
-		presentedTo: "Presented to [TEACHER NAME]",
-		presentedBy: "From the Grateful Students of [BATCH / YEAR]",
+		exLibris: "CSEA CHARTER & COMMEMORATIVE DEDICATION",
+		heading: "Core Objectives & Principles",
+		body: "Fostering excellence in technical innovation, research, and collaborative learning across Computer Science & Engineering.",
+		objectives: [
+			{
+				number: "01",
+				title: "Technical Mastery & Innovation",
+				description: "Empowering students with deep algorithmic knowledge, cutting-edge software engineering skills, and research excellence.",
+			},
+			{
+				number: "02",
+				title: "Collaborative Learning & Mentorship",
+				description: "Bridging academic theory and real-world engineering through active mentorship, team discovery, and continuous guidance.",
+			},
+			{
+				number: "03",
+				title: "Ethical Leadership & Social Impact",
+				description: "Instilling professional integrity, teamwork, and a passion to build technology that serves humanity.",
+			},
+		],
+		presentedTo: "Dedicated to Our Respected Faculty & Mentors",
+		presentedBy: "Presented by Computer Science & Engineering Association (CSEA)",
 	},
 	page2: {
-		heading: "More Than a Teacher",
-		subheading: "The Person Behind the Lessons",
-		leadQuote: "“Behind every lesson was patience. Behind every correction was care. And behind every achievement was someone who believed we could do better.”",
-		content: "To the world outside these halls, you hold the title of teacher. But to those of us fortunate enough to learn under your wing, you have been an architect of our curiosity, a reassuring guide through complexity, and a constant example of quiet integrity.\n\nYou reminded us that scholarship without empathy is barren, and that diligence outlasts fleeting talent. In honoring you today, we celebrate a lifetime of genuine influence.",
-		imagePath: "/images/teacher/portrait.jpg",
-		caption: "[TEACHER PORTRAIT] • A mentor whose wisdom guides generations",
+		heading: "Tribute to Our Visionary HOD",
+		subheading: "Head of Department • Computer Science & Engineering",
+		leadQuote: "“A great leader and educator does not just teach lessons; they inspire minds to dream big, build fearlessly, and lead with purpose.”",
+		content: "With profound gratitude and respect, we honor our Head of Department on Teacher's Day.\n\nUnder your inspiring guidance, CSE has flourished as a center of academic excellence and innovation. Your dedication to student growth and academic integrity guides us every day.",
+		imagePath: "/images/teacher/hod.jpg",
+		caption: "Head of Department • Department of Computer Science & Engineering",
 	},
 	page3: {
-		heading: "Where It All Happened",
-		subheading: "Lectures, Discussions & Everyday Campus Life",
-		intro: "The room where uncertainty turned into understanding. Every chalkboard sketch, lively question, and animated debate became an indelible chapter of our education.",
-		imagePath1: "/images/classroom/lecture.jpg",
-		caption1: "The morning lectures where challenging ideas transformed into sudden, unforgettable clarity.",
-		imagePath2: "/images/memories/mentorship.jpg",
-		caption2: "Small-group discussions: patient feedback, shared laughter, and genuine encouragement.",
+		heading: "Where Discovery Begins",
+		subheading: "Classrooms, Code & Collaboration",
+		intro: "The hall where curiosity transforms into understanding. Every sketch, line of code, and debate shaped our journey.",
+		imagePath1: "/images/classroom/photo_4.jpg",
+		caption1: "Lectures where complex ideas became crystal clear.",
+		imagePath2: "/images/classroom/photo_1.jpg",
+		caption2: "Mentorship, shared laughter, and constant encouragement.",
 	},
 	page4: {
-		heading: "Lessons We Will Carry",
-		subheading: "Principles That Outlive The Syllabus",
+		heading: "Lessons Beyond Books",
+		subheading: "Pillars of Lifelong Learning",
 		principles: [
 			{
 				number: "01",
 				title: "Discipline creates consistency.",
-				description: "Motivation sparks the journey, but deliberate habit and steady resolve build lasting mastery.",
+				description: "Motivation sparks the journey; deliberate habit builds true mastery.",
 			},
 			{
 				number: "02",
-				title: "Questions lead to understanding.",
-				description: "Never hesitate before what is unfamiliar; curiosity and honest inquiry are the true roots of insight.",
+				title: "Curiosity drives innovation.",
+				description: "Never fear the unknown; questions are the seeds of discovery.",
 			},
 			{
 				number: "03",
-				title: "Do the work. Then do it better.",
-				description: "Excellence is never an accident; it is the daily craft of refusing to settle for merely good enough.",
+				title: "Excellence is a daily habit.",
+				description: "Do the work with integrity, then push the boundaries further.",
 			},
 			{
 				number: "04",
-				title: "Mistakes are data for the next attempt.",
-				description: "Every setback teaches what books cannot. Examine without fear, calibrate, and keep moving forward.",
+				title: "Failures are stepping stones.",
+				description: "Every setback carries data for your next victory. Calibrate and persevere.",
 			},
 			{
 				number: "05",
-				title: "Knowledge is a responsibility to share.",
-				description: "True accomplishment is measured not by personal acclaim, but by how generously you illuminate others.",
+				title: "Share your knowledge.",
+				description: "True accomplishment is measured by how generously you illuminate others.",
 			},
 		],
-		accentQuote: "“The syllabus had a final page. Your guidance does not.”",
+		accentQuote: "“The syllabus ends, but your guidance endures forever.”",
 	},
 	page5: {
-		heading: "Moments We Remember",
-		subheading: "The Memories Lived Between the Lessons",
+		heading: "Unforgettable Moments",
+		subheading: "Memories Lived Between the Lessons",
 		moments: [
 			{
-				imagePath: "/images/memories/campus.jpg",
-				caption: "The Conversations.",
-				detail: "Courtyard walks and informal chats that untangled our biggest dilemmas.",
+				imagePath: "/images/memories/photo_2.jpg",
+				caption: "Campus Conversations.",
+				detail: "Courtyard discussions that guided our biggest choices.",
 			},
 			{
-				imagePath: "/images/memories/mentorship.jpg",
-				caption: "The Laughter.",
-				detail: "Moments of warmth that made demanding semesters feel joyful and human.",
+				imagePath: "/images/memories/photo_3.jpg",
+				caption: "Shared Laughter.",
+				detail: "Warmth that made demanding code sprints feel effortless.",
 			},
 			{
-				imagePath: "/images/classroom/lecture.jpg",
-				caption: "The Breakthroughs.",
-				detail: "When an impossible concept finally clicked under your watchful patience.",
+				imagePath: "/images/memories/photo_4.jpg",
+				caption: "Eureka Breakthroughs.",
+				detail: "The thrill when an impossible problem finally clicked.",
 			},
 		],
 	},
 	page6: {
-		heading: "Words That Stayed With Us",
-		subheading: "Echoes of Wisdom in Hallways and Hearts",
+		heading: "Words That Inspire",
+		subheading: "Echoes of Wisdom in Hallways & Hearts",
 		quotes: [
 			{
-				quote: "[QUOTE FROM TEACHER 1: “Never settle for good enough when you possess the capacity for the extraordinary.”]",
-				context: "Advice shared during annual project evaluations",
+				quote: "“Never settle for good enough when you have the power to create the extraordinary.”",
+				context: "Guidance shared during annual project evaluations",
 			},
 			{
-				quote: "[QUOTE FROM TEACHER 2: “The purpose of education is not merely to memorize facts, but to cultivate the courage to seek truth.”]",
-				context: "Commencement address to incoming students",
+				quote: "“Education is not just learning facts, but cultivating courage to build solutions.”",
+				context: "Address to CSEA Students & Innovators",
 			},
 			{
-				quote: "[QUOTE FROM TEACHER 3: “Be patient with the learning curve, but relentless with your personal standards.”]",
-				context: "Classroom reflection before final examinations",
+				quote: "“Be patient with the learning curve, but relentless with your standards.”",
+				context: "Classroom reflection before graduation",
 			},
 		],
-		attribution: "— [TEACHER NAME]",
+		attribution: "— Faculty of CSE",
 	},
 	page7: {
-		heading: "What You Left With Us",
-		subheading: "The Enduring Pillars of Your Mentorship",
+		heading: "Your Enduring Legacy",
+		subheading: "What You Bestowed Upon Us",
 		pillars: [
 			{
-				trait: "Confidence.",
-				meaning: "To stand firm and voice our reasoning even when our convictions were young.",
+				trait: "Confidence",
+				meaning: "To stand firm and articulate our vision with conviction.",
 			},
 			{
-				trait: "Discipline.",
-				meaning: "The inner strength to show up and perform when initial excitement had faded.",
+				trait: "Discipline",
+				meaning: "The strength to show up and perform when excitement fades.",
 			},
 			{
-				trait: "Curiosity.",
-				meaning: "An unrelenting urge to peer beneath the obvious and interrogate the foundations.",
+				trait: "Innovation",
+				meaning: "An unrelenting urge to peer beneath the obvious and build better.",
 			},
 			{
-				trait: "Perspective.",
-				meaning: "The wisdom to see that intellect must always serve humanity and compassion.",
+				trait: "Ethics",
+				meaning: "The wisdom to ensure technology always serves humanity.",
 			},
 			{
-				trait: "Belief.",
-				meaning: "Because you recognized potential in each of us long before we dared see it in ourselves.",
+				trait: "Belief",
+				meaning: "Because you recognized potential in us long before we saw it.",
 			},
 		],
-		imagePath: "/images/memories/campus.jpg",
-		sideNote: "A legacy measured not in test scores, but in the character of those you guided.",
+		imagePath1: "/images/memories/photo_5.jpg",
+		caption1: "Mentorship that endures through time.",
+		imagePath2: "/images/memories/photo_7.jpg",
+		caption2: "Guiding the future with wisdom & dedication.",
+		sideNote: "A legacy measured not in grades, but in the character of innovators you molded.",
 	},
 	page8: {
-		heading: "The People & The Memories",
-		subheading: "A Tapestry of Faces, Milestones, and Shared Years",
-		imagePath: "/images/group/class-photo.jpg",
-		caption: "[CLASS PHOTO] • Moments we will remember. People who shared them. Memories that remain.",
+		heading: "The CSEA Family",
+		subheading: "A Tapestry of Faces & Shared Milestones",
+		imagePath: "/images/group/photo_6.jpg",
+		caption: "CSEA Class & Faculty • Memories that will last a lifetime.",
 		albumNotes: [
-			"Late afternoons in the laboratory comparing notes.",
-			"The nervous energy before presentations and the relief afterward.",
-			"A shared brotherhood and sisterhood forged under your encouragement.",
+			"Late-night hackathons and lab sessions comparing code.",
+			"The thrill of project showcases and shared triumphs.",
+			"A lifelong bond forged under your guidance and wisdom.",
 		],
 	},
 	page9: {
 		heading: "From All of Us",
-		subheading: "A Message of Everlasting Appreciation",
+		subheading: "A Message of Heartfelt Gratitude",
 		letterParagraphs: [
-			"You taught us subjects, but you also taught us how to approach challenges, how to keep learning, and how to keep moving forward.",
-			"The lessons may belong to the classroom, but their impact will travel far beyond it. Whenever we face complex problems, step into unfamiliar rooms, or take our turn to mentor others, we will carry a part of your wisdom with us.",
-			"Thank you for being a teacher we will remember for the rest of our days.",
+			"You taught us syntax, algorithms, and engineering; but far beyond books, you taught us how to think critically, build fearlessly, and lead with honor.",
+			"Whenever we solve complex challenges, pioneer new paths, or guide others, we carry your wisdom as our enduring compass.",
+			"Thank you for your tireless dedication, endless patience, and unwavering belief in our journey.",
 		],
-		signatureLabel: "With deepest respect and heartfelt appreciation,",
-		signatories: "Your Students • Department of [DEPARTMENT]",
+		signatureLabel: "With deepest respect and enduring gratitude,",
+		signatories: "Students & Officers • CSEA",
 		footnote: "“To teach is to touch a life forever.”",
 	},
 	page10: {
-		heading: "THANK YOU, PROFESSOR.",
-		greeting: "HAPPY TEACHER'S DAY",
+		heading: "THANK YOU, PROFESSORS!",
+		greeting: "HAPPY TEACHER'S DAY • CSEA TRIBUTE",
 		stanza: [
 			"For every lesson patiently delivered.",
-			"For every correction given with care.",
+			"For every guidance when code failed to compile.",
 			"For every word of encouragement when we doubted.",
-			"For every moment you believed in our potential.",
+			"For believing in our potential to shape the future.",
 		],
-		closing: "With eternal gratitude,\nYour Students",
-		imagePath: "/images/teacher/portrait.jpg",
+		closing: "WITH ETERNAL GRATITUDE,\nCSEA & DEPARTMENT STUDENTS",
+		imagePath: "/images/teacher/hod.jpg",
 	},
 	insideBackCover: {
 		sealTitle: "COMMEMORATIVE VALEDICTION",
-		sealBody: "Dedicated on Teacher's Day to a mentor whose legacy lives in every student's future.",
+		sealBody: "Dedicated on Teacher's Day by CSEA to mentors whose legacy lives in every student's future.",
 		quote: "“An educator's impact extends into eternity; one can never tell where their influence stops.”",
-		attribution: "Henry Adams",
+		attribution: "Computer Science & Engineering Association (CSEA)",
 	},
 	backCover: {
 		title: "THE MEMORIES WE KEEP",
-		subtitle: "A Teacher's Day Tribute Edition",
-		institution: "[INSTITUTION] • [DEPARTMENT]",
-		year: "COMMEMORATIVE MONOGRAPH",
+		subtitle: "A Teacher's Day Tribute",
+		institution: "Computer Science & Engineering Association (CSEA)",
+		year: "COMMEMORATIVE EDITION",
 	},
 };

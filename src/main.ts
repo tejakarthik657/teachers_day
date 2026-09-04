@@ -43,19 +43,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	// Zoom coordinates for interactive memory inspection
 	const pageActiveAreas: PageActiveArea[] = [
-		// Cover portrait
+		// Cover CSEA Emblem
 		{
 			faceIndex: 0,
-			top: 480 / 2160,
+			top: 620 / 2160,
 			left: 524 / 1528,
 			width: 480 / 1528,
-			height: 580 / 2160,
-			title: `View Portrait of ${bookContent.teacher.name}`,
+			height: 480 / 2160,
+			title: `View CSEA Emblem & Commemorative Crest`,
 			zoom: {
-				top: 480 / 2160,
+				top: 620 / 2160,
 				left: 524 / 1528,
 				width: 480 / 1528,
-				height: 580 / 2160,
+				height: 480 / 2160,
 			},
 		},
 		// Page 2: More Than a Teacher portrait
@@ -309,6 +309,11 @@ function setupUserInterface(flipbook: Flipbook): void {
 		updateSoundIcons(isMuted);
 	});
 
+	const dockDevBadge = document.getElementById("dock-dev-badge");
+	dockDevBadge?.addEventListener("click", e => {
+		e.stopPropagation();
+	});
+
 	btnFullscreen?.addEventListener("click", e => {
 		e.stopPropagation();
 		toggleFullscreen();
@@ -392,4 +397,10 @@ function toggleFullscreen(): void {
 			console.error("Exit fullscreen error", err);
 		});
 	}
+}
+
+if (import.meta.hot) {
+	import.meta.hot.accept(() => {
+		window.location.reload();
+	});
 }
