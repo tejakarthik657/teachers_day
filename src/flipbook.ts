@@ -996,7 +996,10 @@ export default class Flipbook {
 
 		const distanceH = width / 2 / Math.tan(hFOV / 2);
 		const distanceV = height / 2 / Math.tan(fovYRadians / 2);
-		const distance = Math.max(distanceH, distanceV);
+		let distance = Math.max(distanceH, distanceV);
+		if (this.isVerticalMode) {
+			distance *= 1.1;
+		}
 
 		const targetPosition = new THREE.Vector3(
 			center.x + normal.x * distance,
@@ -1041,7 +1044,7 @@ export default class Flipbook {
 		// applying transformations to the corners
 		if (this.isVerticalMode) {
 			corners.forEach(point => {
-				point.x *= 0.6;
+				point.x *= 0.95;
 			});
 		}
 

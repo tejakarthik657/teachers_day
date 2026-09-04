@@ -474,17 +474,26 @@ body {
 	object-fit: contain;
 }
 
-/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
+/* ==================== COMPREHENSIVE MOBILE & TABLET RESPONSIVENESS ==================== */
 
-@media (max-width: 600px) {
+html, body {
+	touch-action: none;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	overflow: hidden;
+}
+
+@media (max-width: 768px) {
 	.book-nav-dock {
 		bottom: 16px;
 		padding: 6px 12px;
-		gap: 4px;
+		gap: 6px;
+		max-width: 95vw;
 	}
 
 	.spread-title {
-		max-width: 140px;
+		max-width: 180px;
 		font-size: 13px;
 	}
 
@@ -492,11 +501,118 @@ body {
 		font-size: 10px;
 	}
 
-	.hint-toast {
-		font-size: 10px;
+	.developer-attribution.zoom-in {
+		transform: translate(-50%, -50%) scale(1.35);
+	}
+}
+
+@media (max-width: 520px) {
+	.book-nav-dock {
+		bottom: 12px;
+		padding: 4px 8px;
+		gap: 3px;
+		border-radius: 30px;
+	}
+
+	.dock-btn {
+		width: 32px;
+		height: 32px;
+	}
+
+	.dock-btn svg {
+		width: 15px;
+		height: 15px;
+	}
+
+	.spread-indicator {
+		padding: 2px 6px;
+	}
+
+	.spread-title {
+		display: none;
+	}
+
+	.spread-tag {
+		font-size: 9px;
 		letter-spacing: 1px;
-		padding: 6px 14px;
-		top: 14px;
+	}
+
+	.dock-separator {
+		margin: 0 2px;
+		height: 18px;
+	}
+
+	.dock-dev-badge {
+		padding: 2px 6px;
+		gap: 4px;
+	}
+
+	.dev-label {
+		font-size: 8px;
+		letter-spacing: 1px;
+	}
+
+	.dock-dev-img {
+		height: 18px;
+	}
+
+	.toc-drawer {
+		bottom: 64px;
+		width: 94vw;
+		max-height: 80vh;
+		padding: 16px;
+		border-radius: 12px;
+	}
+
+	.toc-title {
+		font-size: 14px;
+		letter-spacing: 2px;
+	}
+
+	.toc-item {
+		padding: 10px 12px;
+	}
+
+	.toc-item-title {
+		font-size: 15px;
+	}
+
+	.hint-toast {
+		font-size: 9px;
+		letter-spacing: 1px;
+		padding: 6px 12px;
+		top: 12px;
+		max-width: 90vw;
+		white-space: normal;
+	}
+
+	.intro-overlay .logo {
+		max-width: 140px;
+	}
+
+	.intro-overlay .loading-caption {
+		font-size: 13px;
+		letter-spacing: 2px;
+	}
+
+	.developer-attribution.zoom-in {
+		transform: translate(-50%, -50%) scale(1.15);
+	}
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+	.book-nav-dock {
+		bottom: 8px;
+		padding: 3px 10px;
+	}
+
+	.spread-title {
+		display: none;
+	}
+
+	.toc-drawer {
+		bottom: 48px;
+		max-height: 85vh;
 	}
 }
 
