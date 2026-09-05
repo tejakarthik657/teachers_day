@@ -301,6 +301,7 @@ export class PageRenderer {
 		h: number,
 		caption = "",
 		placeholderLabel = "[PHOTO]",
+		fitMode: "cover" | "contain" = "cover",
 	): void {
 		ctx.save();
 		// Outer shadow
@@ -327,7 +328,6 @@ export class PageRenderer {
 
 		const img = this.imageCache.get(imgUrl);
 		if (img && img.complete && img.naturalWidth > 0) {
-			// Draw image with object-fit: cover
 			ctx.save();
 			ctx.beginPath();
 			ctx.rect(innerX, innerY, innerW, innerH);
@@ -340,15 +340,40 @@ export class PageRenderer {
 			let offX = innerX;
 			let offY = innerY;
 
-			if (imgAspect > frameAspect) {
-				drawW = innerH * imgAspect;
-				offX = innerX - (drawW - innerW) / 2;
+			if (fitMode === "contain") {
+				// Soft matting background for contain mode
+				ctx.fillStyle = "#fcf8f0";
+				ctx.fillRect(innerX, innerY, innerW, innerH);
+
+				if (imgAspect > frameAspect) {
+					drawW = innerW;
+					drawH = innerW / imgAspect;
+					offX = innerX;
+					offY = innerY + (innerH - drawH) / 2;
+				} else {
+					drawH = innerH;
+					drawW = innerH * imgAspect;
+					offX = innerX + (innerW - drawW) / 2;
+					offY = innerY;
+				}
 			} else {
-				drawH = innerW / imgAspect;
-				offY = innerY - (drawH - innerH) / 2;
+				if (imgAspect > frameAspect) {
+					drawW = innerH * imgAspect;
+					offX = innerX - (drawW - innerW) / 2;
+				} else {
+					drawH = innerW / imgAspect;
+					offY = innerY - (drawH - innerH) / 2;
+				}
 			}
 
 			ctx.drawImage(img, offX, offY, drawW, drawH);
+
+			if (fitMode === "contain") {
+				ctx.strokeStyle = "rgba(197, 160, 89, 0.75)";
+				ctx.lineWidth = 2;
+				ctx.strokeRect(offX, offY, drawW, drawH);
+			}
+
 			ctx.restore();
 		} else {
 			// Elegant academic photo placeholder
@@ -1054,25 +1079,19 @@ export class PageRenderer {
 		ctx.letterSpacing = "4px";
 		ctx.fillText(content.facultyPage1.subheading.toUpperCase(), 140, 275);
 
-		// 3 Faculty Photos Framed Gallery
-		let cardY = 320;
-		const cardW = this.width - 280; // 1248px
-		const cardH = 500;
-
-		content.facultyPage1.members.forEach((m, idx) => {
-			this.drawImageFrame(
-				ctx,
-				m.imagePath,
-				140,
-				cardY,
-				cardW,
-				cardH,
-				"",
-				`[FACULTY PHOTO ${idx + 1}]`,
-			);
-
-			cardY += 530;
-		});
+		const m = content.facultyPage1.members;
+		// Photo 1: Top full-width landscape photo (8.jpeg)
+		if (m[0]) {
+			this.drawImageFrame(ctx, m[0].imagePath, 140, 320, 1248, 480, "", "[FACULTY PHOTO 1]", "contain");
+		}
+		// Photo 2: Bottom-Left portrait photo (9.jpg)
+		if (m[1]) {
+			this.drawImageFrame(ctx, m[1].imagePath, 140, 830, 604, 1060, "", "[FACULTY PHOTO 2]", "contain");
+		}
+		// Photo 3: Bottom-Right portrait photo (10.jpeg)
+		if (m[2]) {
+			this.drawImageFrame(ctx, m[2].imagePath, 784, 830, 604, 1060, "", "[FACULTY PHOTO 3]", "contain");
+		}
 
 		ctx.restore();
 	}
@@ -1097,25 +1116,19 @@ export class PageRenderer {
 		ctx.letterSpacing = "4px";
 		ctx.fillText(content.facultyPage2.subheading.toUpperCase(), 140, 275);
 
-		// 3 Faculty Photos Framed Gallery
-		let cardY = 320;
-		const cardW = this.width - 280; // 1248px
-		const cardH = 500;
-
-		content.facultyPage2.members.forEach((m, idx) => {
-			this.drawImageFrame(
-				ctx,
-				m.imagePath,
-				140,
-				cardY,
-				cardW,
-				cardH,
-				"",
-				`[FACULTY PHOTO ${idx + 4}]`,
-			);
-
-			cardY += 530;
-		});
+		const m = content.facultyPage2.members;
+		// Photo 4: Top-Left portrait photo (11.jpeg)
+		if (m[0]) {
+			this.drawImageFrame(ctx, m[0].imagePath, 140, 320, 604, 860, "", "[FACULTY PHOTO 4]", "contain");
+		}
+		// Photo 5: Top-Right portrait photo (12.jpeg)
+		if (m[1]) {
+			this.drawImageFrame(ctx, m[1].imagePath, 784, 320, 604, 860, "", "[FACULTY PHOTO 5]", "contain");
+		}
+		// Photo 6: Bottom centered photo (13.jpeg)
+		if (m[2]) {
+			this.drawImageFrame(ctx, m[2].imagePath, 140, 1210, 1248, 680, "", "[FACULTY PHOTO 6]", "contain");
+		}
 
 		ctx.restore();
 	}
