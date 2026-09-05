@@ -1,13 +1,40 @@
 export class AudioService {
 	private audioCtx: AudioContext | null = null;
-	private isMuted: boolean = true;
-	private isAmbientPlaying: boolean = false;
-	private ambientOscillators: OscillatorNode[] = [];
-	private ambientGain: GainNode | null = null;
+	private isMuted: boolean = false;
+	private bgAudio: HTMLAudioElement | null = null;
 
 	constructor() {
 		const savedMute = localStorage.getItem("td_book_muted");
-		this.isMuted = savedMute !== null ? savedMute === "true" : true;
+		this.isMuted = savedMute !== null ? savedMute === "true" : false;
+
+		// Load custom Ilahi Instrumental background music
+		this.initBgAudio();
+
+		// Attach user interaction listeners to handle browser autoplay policies
+		const enableAudioOnInteraction = () => {
+			this.initContext();
+			if (!this.isMuted) {
+				this.playBGM();
+			}
+			window.removeEventListener("click", enableAudioOnInteraction);
+			window.removeEventListener("touchstart", enableAudioOnInteraction);
+			window.removeEventListener("keydown", enableAudioOnInteraction);
+		};
+
+		window.addEventListener("click", enableAudioOnInteraction, { passive: true });
+		window.addEventListener("touchstart", enableAudioOnInteraction, { passive: true });
+		window.addEventListener("keydown", enableAudioOnInteraction, { passive: true });
+	}
+
+	private initBgAudio(): void {
+		try {
+			this.bgAudio = new Audio("/audio/Ilahi Instrumental.mp3");
+			this.bgAudio.loop = true; // Ensure continuous loop playback
+			this.bgAudio.volume = 0.55;
+			this.bgAudio.preload = "auto";
+		} catch (err) {
+			console.error("Failed to initialize background audio element", err);
+		}
 	}
 
 	private initContext(): void {
@@ -21,7 +48,7 @@ export class AudioService {
 			}
 		}
 		if (this.audioCtx && this.audioCtx.state === "suspended") {
-			this.audioCtx.resume();
+			this.audioCtx.resume().catch(() => {});
 		}
 	}
 
@@ -33,16 +60,29 @@ export class AudioService {
 		this.isMuted = muted;
 		localStorage.setItem("td_book_muted", String(muted));
 		if (muted) {
-			this.stopAmbient();
+			this.pauseBGM();
 		} else {
 			this.initContext();
-			this.startAmbient();
+			this.playBGM();
 		}
 	}
 
 	public toggleMute(): boolean {
 		this.setMuted(!this.isMuted);
 		return this.isMuted;
+	}
+
+	public playBGM(): void {
+		if (this.isMuted || !this.bgAudio) return;
+		this.bgAudio.play().catch(err => {
+			console.log("Autoplay waiting for user gesture:", err);
+		});
+	}
+
+	public pauseBGM(): void {
+		if (this.bgAudio) {
+			this.bgAudio.pause();
+		}
 	}
 
 	/**
@@ -94,63 +134,6 @@ export class AudioService {
 
 		whiteNoise.start();
 		whiteNoise.stop(ctx.currentTime + duration);
-	}
-
-	/**
-	 * Soft meditative harmonic ambient chords (warm ivory / piano-like calmness)
-	 */
-	private startAmbient(): void {
-		if (this.isAmbientPlaying || this.isMuted) return;
-		this.initContext();
-		if (!this.audioCtx) return;
-
-		const ctx = this.audioCtx;
-		this.ambientGain = ctx.createGain();
-		this.ambientGain.gain.setValueAtTime(0.001, ctx.currentTime);
-		this.ambientGain.gain.linearRampToValueAtTime(0.035, ctx.currentTime + 3);
-		this.ambientGain.connect(ctx.destination);
-
-		// Calming harmonic chord: D major / add9 (D3, A3, F#4, E4)
-		const freqs = [146.83, 220.0, 369.99, 329.63];
-		this.ambientOscillators = freqs.map(freq => {
-			const osc = ctx.createOscillator();
-			osc.type = "sine";
-			osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-			// Subtle slow modulation
-			const lfo = ctx.createOscillator();
-			lfo.frequency.setValueAtTime(0.15, ctx.currentTime);
-			const lfoGain = ctx.createGain();
-			lfoGain.gain.setValueAtTime(1.2, ctx.currentTime);
-			lfo.connect(lfoGain);
-			lfoGain.connect(osc.frequency);
-			lfo.start();
-
-			osc.connect(this.ambientGain!);
-			osc.start();
-			return osc;
-		});
-
-		this.isAmbientPlaying = true;
-	}
-
-	private stopAmbient(): void {
-		if (!this.isAmbientPlaying || !this.audioCtx) return;
-		if (this.ambientGain) {
-			this.ambientGain.gain.linearRampToValueAtTime(
-				0.001,
-				this.audioCtx.currentTime + 1,
-			);
-			setTimeout(() => {
-				this.ambientOscillators.forEach(osc => osc.stop());
-				this.ambientOscillators = [];
-				this.isAmbientPlaying = false;
-			}, 1000);
-		} else {
-			this.ambientOscillators.forEach(osc => osc.stop());
-			this.ambientOscillators = [];
-			this.isAmbientPlaying = false;
-		}
 	}
 }
 
