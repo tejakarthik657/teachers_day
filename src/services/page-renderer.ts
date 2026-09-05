@@ -23,6 +23,9 @@ export class PageRenderer {
 			content.page10.imagePath,
 			"/img/csea-logo.png",
 			"/img/developer-logo.png",
+			"/img/developer-logo-light.png",
+			"/img/developer-logo-dark.png",
+			"/img/watermark-logo.png",
 		];
 
 		const uniqueUrls = Array.from(new Set(urls.filter(Boolean)));
@@ -174,6 +177,23 @@ export class PageRenderer {
 			ctx.fillRect(x, y, 1.8, 1.8);
 		}
 		ctx.restore();
+
+		// Subtle authentic paper watermark (Dark Devframes emblem softly blended into paper)
+		const wmImg = this.imageCache.get("/img/watermark-logo.png");
+		if (wmImg && wmImg.complete && wmImg.naturalWidth > 0) {
+			ctx.save();
+			ctx.globalAlpha = 0.055; // Subtle, elegant blending into paper texture
+			const wmW = 540;
+			const wmH = (wmImg.naturalHeight / wmImg.naturalWidth) * wmW || 540;
+			ctx.drawImage(
+				wmImg,
+				this.width / 2 - wmW / 2,
+				this.height * 0.52 - wmH / 2,
+				wmW,
+				wmH,
+			);
+			ctx.restore();
+		}
 	}
 
 	private drawCoverBase(ctx: CanvasRenderingContext2D): void {
@@ -488,6 +508,19 @@ export class PageRenderer {
 		ctx.fillStyle = "#c5a059";
 		ctx.letterSpacing = "4px";
 		ctx.fillText(content.teacher.institution, this.width / 2, 1690);
+
+		// Devframes Light Logo Attribution at bottom of Front Cover
+		const devLightImg = this.imageCache.get("/img/developer-logo-light.png") || this.imageCache.get("/img/developer-logo.png");
+		if (devLightImg && devLightImg.complete && devLightImg.naturalWidth > 0) {
+			ctx.font = "900 20px 'Cinzel', serif";
+			ctx.fillStyle = "#c5a059";
+			ctx.letterSpacing = "4px";
+			ctx.fillText("DEVELOPED BY DEVFRAMES", this.width / 2, 1810);
+
+			const devW = 260;
+			const devH = (devLightImg.naturalHeight / devLightImg.naturalWidth) * devW || 85;
+			ctx.drawImage(devLightImg, this.width / 2 - devW / 2, 1840, devW, devH);
+		}
 
 		ctx.restore();
 	}
@@ -1339,8 +1372,8 @@ export class PageRenderer {
 		ctx.fillText("DEVFRAMES", this.width / 2, devBoxY + 145);
 
 		// Developer Logo Image inside Devframes card
-		const devLogo = this.imageCache.get("/img/developer-logo.png");
-		if (devLogo && devLogo.complete) {
+		const devLogo = this.imageCache.get("/img/developer-logo-dark.png") || this.imageCache.get("/img/developer-logo.png");
+		if (devLogo && devLogo.complete && devLogo.naturalWidth > 0) {
 			const devLogoW = 300;
 			const devLogoH = (devLogo.naturalHeight / devLogo.naturalWidth) * devLogoW || 110;
 			ctx.drawImage(devLogo, this.width / 2 - devLogoW / 2, devBoxY + 185, devLogoW, devLogoH);
@@ -1403,7 +1436,7 @@ export class PageRenderer {
 		ctx.fillStyle = "#f5eee1";
 		ctx.fillText(content.backCover.institution, this.width / 2, 1000);
 
-		// Developer company logo placement on back cover
+		// Developer company logo placement on back cover (using light logo on dark background)
 		const devBoxW = 480;
 		const devBoxH = 340;
 		const devBoxX = this.width / 2 - devBoxW / 2;
@@ -1425,10 +1458,10 @@ export class PageRenderer {
 		ctx.letterSpacing = "5px";
 		ctx.fillText("DEVFRAMES", this.width / 2, devBoxY + 115);
 
-		const devLogo = this.imageCache.get("/img/developer-logo.png");
-		if (devLogo && devLogo.complete) {
-			const devW = 240;
-			const devH = (devLogo.naturalHeight / devLogo.naturalWidth) * devW || 90;
+		const devLogo = this.imageCache.get("/img/developer-logo-light.png") || this.imageCache.get("/img/developer-logo.png");
+		if (devLogo && devLogo.complete && devLogo.naturalWidth > 0) {
+			const devW = 260;
+			const devH = (devLogo.naturalHeight / devLogo.naturalWidth) * devW || 95;
 			ctx.drawImage(devLogo, this.width / 2 - devW / 2, devBoxY + 155, devW, devH);
 		}
 
