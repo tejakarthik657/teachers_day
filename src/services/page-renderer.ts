@@ -1046,76 +1046,32 @@ export class PageRenderer {
 		ctx.save();
 		ctx.textAlign = "left";
 		ctx.fillStyle = "#180d05";
-		ctx.font = "italic 900 58px 'Cormorant Garamond', Georgia, serif";
-		ctx.fillText(content.facultyPage1.heading, 140, 240);
+		ctx.font = "italic 900 56px 'Cormorant Garamond', Georgia, serif";
+		ctx.fillText(content.facultyPage1.heading, 140, 230);
 
-		ctx.font = "900 22px 'Cinzel', serif";
+		ctx.font = "900 20px 'Cinzel', serif";
 		ctx.fillStyle = "#36210b";
 		ctx.letterSpacing = "4px";
-		ctx.fillText(content.facultyPage1.subheading.toUpperCase(), 140, 290);
+		ctx.fillText(content.facultyPage1.subheading.toUpperCase(), 140, 275);
 
-		// 3 Faculty Cards Layout
-		let cardY = 360;
-		const cardW = this.width - 280;
-		const cardH = 460;
+		// 3 Faculty Photos Framed Gallery
+		let cardY = 320;
+		const cardW = this.width - 280; // 1248px
+		const cardH = 500;
 
 		content.facultyPage1.members.forEach((m, idx) => {
-			const photoW = 340;
-			const photoH = 400;
-			const photoX = 160;
-			const photoY = cardY + 30;
-
-			// Card background matting
-			ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
-			ctx.fillRect(140, cardY, cardW, cardH);
-			ctx.strokeStyle = "#c5a059";
-			ctx.lineWidth = 1.5;
-			ctx.strokeRect(140, cardY, cardW, cardH);
-
-			// Faculty Photo Frame
 			this.drawImageFrame(
 				ctx,
 				m.imagePath,
-				photoX,
-				photoY,
-				photoW,
-				photoH,
+				140,
+				cardY,
+				cardW,
+				cardH,
 				"",
-				`[FACULTY ${idx + 1}]`,
+				`[FACULTY PHOTO ${idx + 1}]`,
 			);
 
-			// Details Text (Right of Photo)
-			const textX = photoX + photoW + 40;
-			ctx.textAlign = "left";
-
-			ctx.font = "900 38px 'Cinzel Decorative', 'Cormorant Garamond', Georgia, serif";
-			ctx.fillStyle = "#0f0803";
-			ctx.fillText(m.name, textX, photoY + 60);
-
-			ctx.font = "700 24px 'Cinzel', serif";
-			ctx.fillStyle = "#5e3e13";
-			ctx.letterSpacing = "2px";
-			ctx.fillText(m.designation.toUpperCase(), textX, photoY + 110);
-
-			ctx.font = "600 22px 'Cinzel', serif";
-			ctx.fillStyle = "#8c6527";
-			ctx.letterSpacing = "1.5px";
-			ctx.fillText(m.department, textX, photoY + 150);
-
-			// Divider accent line
-			ctx.strokeStyle = "#c5a059";
-			ctx.lineWidth = 1.2;
-			ctx.beginPath();
-			ctx.moveTo(textX, photoY + 180);
-			ctx.lineTo(textX + 420, photoY + 180);
-			ctx.stroke();
-
-			// Inspiring Quote
-			ctx.font = "italic 700 30px/1.6 'Cormorant Garamond', Georgia, serif";
-			ctx.fillStyle = "#140d06";
-			this.wrapText(ctx, m.quote, textX, photoY + 225, cardW - photoW - 80, 42);
-
-			cardY += 490;
+			cardY += 530;
 		});
 
 		ctx.restore();
@@ -1133,76 +1089,32 @@ export class PageRenderer {
 		ctx.save();
 		ctx.textAlign = "left";
 		ctx.fillStyle = "#180d05";
-		ctx.font = "italic 900 58px 'Cormorant Garamond', Georgia, serif";
-		ctx.fillText(content.facultyPage2.heading, 140, 240);
+		ctx.font = "italic 900 56px 'Cormorant Garamond', Georgia, serif";
+		ctx.fillText(content.facultyPage2.heading, 140, 230);
 
-		ctx.font = "900 22px 'Cinzel', serif";
+		ctx.font = "900 20px 'Cinzel', serif";
 		ctx.fillStyle = "#36210b";
 		ctx.letterSpacing = "4px";
-		ctx.fillText(content.facultyPage2.subheading.toUpperCase(), 140, 290);
+		ctx.fillText(content.facultyPage2.subheading.toUpperCase(), 140, 275);
 
-		// 3 Faculty Cards Layout
-		let cardY = 360;
-		const cardW = this.width - 280;
-		const cardH = 460;
+		// 3 Faculty Photos Framed Gallery
+		let cardY = 320;
+		const cardW = this.width - 280; // 1248px
+		const cardH = 500;
 
 		content.facultyPage2.members.forEach((m, idx) => {
-			const photoW = 340;
-			const photoH = 400;
-			const photoX = 160;
-			const photoY = cardY + 30;
-
-			// Card background matting
-			ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
-			ctx.fillRect(140, cardY, cardW, cardH);
-			ctx.strokeStyle = "#c5a059";
-			ctx.lineWidth = 1.5;
-			ctx.strokeRect(140, cardY, cardW, cardH);
-
-			// Faculty Photo Frame
 			this.drawImageFrame(
 				ctx,
 				m.imagePath,
-				photoX,
-				photoY,
-				photoW,
-				photoH,
+				140,
+				cardY,
+				cardW,
+				cardH,
 				"",
-				`[FACULTY ${idx + 4}]`,
+				`[FACULTY PHOTO ${idx + 4}]`,
 			);
 
-			// Details Text (Right of Photo)
-			const textX = photoX + photoW + 40;
-			ctx.textAlign = "left";
-
-			ctx.font = "900 38px 'Cinzel Decorative', 'Cormorant Garamond', Georgia, serif";
-			ctx.fillStyle = "#0f0803";
-			ctx.fillText(m.name, textX, photoY + 60);
-
-			ctx.font = "700 24px 'Cinzel', serif";
-			ctx.fillStyle = "#5e3e13";
-			ctx.letterSpacing = "2px";
-			ctx.fillText(m.designation.toUpperCase(), textX, photoY + 110);
-
-			ctx.font = "600 22px 'Cinzel', serif";
-			ctx.fillStyle = "#8c6527";
-			ctx.letterSpacing = "1.5px";
-			ctx.fillText(m.department, textX, photoY + 150);
-
-			// Divider accent line
-			ctx.strokeStyle = "#c5a059";
-			ctx.lineWidth = 1.2;
-			ctx.beginPath();
-			ctx.moveTo(textX, photoY + 180);
-			ctx.lineTo(textX + 420, photoY + 180);
-			ctx.stroke();
-
-			// Inspiring Quote
-			ctx.font = "italic 700 30px/1.6 'Cormorant Garamond', Georgia, serif";
-			ctx.fillStyle = "#140d06";
-			this.wrapText(ctx, m.quote, textX, photoY + 225, cardW - photoW - 80, 42);
-
-			cardY += 490;
+			cardY += 530;
 		});
 
 		ctx.restore();
