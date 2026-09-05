@@ -84,6 +84,28 @@ export interface BookContent {
 		caption2: string;
 		sideNote: string;
 	};
+	facultyPage1: {
+		heading: string;
+		subheading: string;
+		members: Array<{
+			name: string;
+			designation: string;
+			department: string;
+			imagePath: string;
+			quote: string;
+		}>;
+	};
+	facultyPage2: {
+		heading: string;
+		subheading: string;
+		members: Array<{
+			name: string;
+			designation: string;
+			department: string;
+			imagePath: string;
+			quote: string;
+		}>;
+	};
 	page8: {
 		heading: string;
 		subheading: string;
@@ -279,6 +301,60 @@ export const bookContent: BookContent = {
 		imagePath2: "/images/memories/photo_7.jpg",
 		caption2: "Guiding the future with wisdom & dedication.",
 		sideNote: "A legacy measured not in grades, but in the character of innovators you molded.",
+	},
+	facultyPage1: {
+		heading: "Our Esteemed Faculty",
+		subheading: "Visionaries Shaping the Future",
+		members: [
+			{
+				name: "Professor A",
+				designation: "Senior Professor",
+				department: "Computer Science",
+				imagePath: "/images/faculty/1.jpg",
+				quote: "Code with purpose.",
+			},
+			{
+				name: "Professor B",
+				designation: "Associate Professor",
+				department: "Computer Science",
+				imagePath: "/images/faculty/2.jpg",
+				quote: "Innovate endlessly.",
+			},
+			{
+				name: "Professor C",
+				designation: "Assistant Professor",
+				department: "Computer Science",
+				imagePath: "/images/faculty/3.jpg",
+				quote: "Build for humanity.",
+			},
+		],
+	},
+	facultyPage2: {
+		heading: "Our Esteemed Faculty",
+		subheading: "Mentors of Excellence",
+		members: [
+			{
+				name: "Professor D",
+				designation: "Assistant Professor",
+				department: "Computer Science",
+				imagePath: "/images/faculty/4.jpg",
+				quote: "Think deeply.",
+			},
+			{
+				name: "Professor E",
+				designation: "Lecturer",
+				department: "Computer Science",
+				imagePath: "/images/faculty/5.jpg",
+				quote: "Learn always.",
+			},
+			{
+				name: "Professor F",
+				designation: "Lecturer",
+				department: "Computer Science",
+				imagePath: "/images/faculty/6.jpg",
+				quote: "Lead with integrity.",
+			},
+		],
 	},
 	page8: {
 		heading: "The CSEA Family",

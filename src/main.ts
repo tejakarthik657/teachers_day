@@ -21,10 +21,11 @@ const chapters: ChapterSpread[] = [
 	{ page: 1, tag: "Spread 1", title: "Dedication & More Than a Teacher" },
 	{ page: 2, tag: "Spread 2", title: "Where It All Happened & Lessons We Carry" },
 	{ page: 3, tag: "Spread 3", title: "Moments We Remember & Words That Stayed" },
-	{ page: 4, tag: "Spread 4", title: "What You Left With Us & Class Album" },
-	{ page: 5, tag: "Spread 5", title: "From All of Us & Final Thank You" },
-	{ page: 6, tag: "Spread 6", title: "Commemorative Valediction" },
-	{ page: 7, tag: "Back", title: "Outside Back Cover" },
+	{ page: 4, tag: "Spread 4", title: "What You Left With Us & Faculty Gallery I" },
+	{ page: 5, tag: "Spread 5", title: "Faculty Gallery II & Class Album" },
+	{ page: 6, tag: "Spread 6", title: "From All of Us & Final Thank You" },
+	{ page: 7, tag: "Spread 7", title: "Commemorative Valediction & Imprint" },
+	{ page: 8, tag: "Back", title: "Outside Back Cover" },
 ];
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const progressInner = document.querySelector(".progress-inner") as HTMLElement;
 
-	// Render all 14 pages dynamically on adaptive high-DPI canvas
+	// Render all 16 pages dynamically on adaptive high-DPI canvas
 	const renderer = new PageRenderer(1528, 2160);
 	const renderedPages = await renderer.renderAllPages(bookContent, percent => {
 		if (progressInner) {
@@ -169,9 +170,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 				height: 680 / 2160,
 			},
 		},
-		// Page 8: Class photo album
+		// Page 10: Class photo album
 		{
-			faceIndex: 8,
+			faceIndex: 10,
 			top: 360 / 2160,
 			left: 140 / 1528,
 			width: 1248 / 1528,
@@ -184,9 +185,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 				height: 820 / 2160,
 			},
 		},
-		// Page 10: Final Thank You portrait
+		// Page 12: Final Thank You portrait
 		{
-			faceIndex: 10,
+			faceIndex: 12,
 			top: 410 / 2160,
 			left: 494 / 1528,
 			width: 540 / 1528,

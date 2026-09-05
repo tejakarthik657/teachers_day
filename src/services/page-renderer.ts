@@ -19,6 +19,8 @@ export class PageRenderer {
 			...content.page5.moments.map(m => m.imagePath),
 			content.page7.imagePath1,
 			content.page7.imagePath2,
+			...content.facultyPage1.members.map(m => m.imagePath),
+			...content.facultyPage2.members.map(m => m.imagePath),
 			content.page8.imagePath,
 			content.page10.imagePath,
 			"/img/csea-logo.png",
@@ -73,7 +75,7 @@ export class PageRenderer {
 		const scaleY = targetHeight / this.height;
 
 		const pages: string[] = [];
-		for (let i = 0; i < 14; i++) {
+		for (let i = 0; i < 16; i++) {
 			const canvas = document.createElement("canvas");
 			canvas.width = targetWidth;
 			canvas.height = targetHeight;
@@ -87,7 +89,7 @@ export class PageRenderer {
 			ctx.restore();
 
 			pages.push(canvas.toDataURL("image/jpeg", 0.92));
-			onProgress?.(Math.round(((i + 1) / 14) * 100));
+			onProgress?.(Math.round(((i + 1) / 16) * 100));
 
 			// Yield to browser UI thread to prevent main thread freezing
 			await new Promise(resolve => setTimeout(resolve, 10));
@@ -127,21 +129,27 @@ export class PageRenderer {
 				await this.drawPage7(ctx, content);
 				break;
 			case 8:
-				await this.drawPage8(ctx, content);
+				await this.drawFacultyPage1(ctx, content);
 				break;
 			case 9:
-				await this.drawPage9(ctx, content);
+				await this.drawFacultyPage2(ctx, content);
 				break;
 			case 10:
-				await this.drawPage10(ctx, content);
+				await this.drawPage8(ctx, content);
 				break;
 			case 11:
-				await this.drawInsideBackCover(ctx, content);
+				await this.drawPage9(ctx, content);
 				break;
 			case 12:
-				await this.drawEndpaper(ctx, content);
+				await this.drawPage10(ctx, content);
 				break;
 			case 13:
+				await this.drawInsideBackCover(ctx, content);
+				break;
+			case 14:
+				await this.drawEndpaper(ctx, content);
+				break;
+			case 15:
 				await this.drawBackCover(ctx, content);
 				break;
 			default:
@@ -1026,14 +1034,188 @@ export class PageRenderer {
 		ctx.restore();
 	}
 
-	// Page 8: THE PEOPLE AND THE MEMORIES (Photo Album)
+	// Page 8: HONORED FACULTY & MENTORS (Part 1 - 3 Faculty Members)
+	private async drawFacultyPage1(
+		ctx: CanvasRenderingContext2D,
+		content: BookContent,
+	): Promise<void> {
+		this.drawPaperBase(ctx);
+		this.drawPageBorders(ctx, false, 80);
+		this.drawHeaderAndFolio(ctx, "08", "FACULTY & MENTORS", false);
+
+		ctx.save();
+		ctx.textAlign = "left";
+		ctx.fillStyle = "#180d05";
+		ctx.font = "italic 900 58px 'Cormorant Garamond', Georgia, serif";
+		ctx.fillText(content.facultyPage1.heading, 140, 240);
+
+		ctx.font = "900 22px 'Cinzel', serif";
+		ctx.fillStyle = "#36210b";
+		ctx.letterSpacing = "4px";
+		ctx.fillText(content.facultyPage1.subheading.toUpperCase(), 140, 290);
+
+		// 3 Faculty Cards Layout
+		let cardY = 360;
+		const cardW = this.width - 280;
+		const cardH = 460;
+
+		content.facultyPage1.members.forEach((m, idx) => {
+			const photoW = 340;
+			const photoH = 400;
+			const photoX = 160;
+			const photoY = cardY + 30;
+
+			// Card background matting
+			ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
+			ctx.fillRect(140, cardY, cardW, cardH);
+			ctx.strokeStyle = "#c5a059";
+			ctx.lineWidth = 1.5;
+			ctx.strokeRect(140, cardY, cardW, cardH);
+
+			// Faculty Photo Frame
+			this.drawImageFrame(
+				ctx,
+				m.imagePath,
+				photoX,
+				photoY,
+				photoW,
+				photoH,
+				"",
+				`[FACULTY ${idx + 1}]`,
+			);
+
+			// Details Text (Right of Photo)
+			const textX = photoX + photoW + 40;
+			ctx.textAlign = "left";
+
+			ctx.font = "900 38px 'Cinzel Decorative', 'Cormorant Garamond', Georgia, serif";
+			ctx.fillStyle = "#0f0803";
+			ctx.fillText(m.name, textX, photoY + 60);
+
+			ctx.font = "700 24px 'Cinzel', serif";
+			ctx.fillStyle = "#5e3e13";
+			ctx.letterSpacing = "2px";
+			ctx.fillText(m.designation.toUpperCase(), textX, photoY + 110);
+
+			ctx.font = "600 22px 'Cinzel', serif";
+			ctx.fillStyle = "#8c6527";
+			ctx.letterSpacing = "1.5px";
+			ctx.fillText(m.department, textX, photoY + 150);
+
+			// Divider accent line
+			ctx.strokeStyle = "#c5a059";
+			ctx.lineWidth = 1.2;
+			ctx.beginPath();
+			ctx.moveTo(textX, photoY + 180);
+			ctx.lineTo(textX + 420, photoY + 180);
+			ctx.stroke();
+
+			// Inspiring Quote
+			ctx.font = "italic 700 30px/1.6 'Cormorant Garamond', Georgia, serif";
+			ctx.fillStyle = "#140d06";
+			this.wrapText(ctx, m.quote, textX, photoY + 225, cardW - photoW - 80, 42);
+
+			cardY += 490;
+		});
+
+		ctx.restore();
+	}
+
+	// Page 9: HONORED FACULTY & MENTORS (Part 2 - 3 Faculty Members)
+	private async drawFacultyPage2(
+		ctx: CanvasRenderingContext2D,
+		content: BookContent,
+	): Promise<void> {
+		this.drawPaperBase(ctx);
+		this.drawPageBorders(ctx, false, 80);
+		this.drawHeaderAndFolio(ctx, "09", "FACULTY & MENTORS", true);
+
+		ctx.save();
+		ctx.textAlign = "left";
+		ctx.fillStyle = "#180d05";
+		ctx.font = "italic 900 58px 'Cormorant Garamond', Georgia, serif";
+		ctx.fillText(content.facultyPage2.heading, 140, 240);
+
+		ctx.font = "900 22px 'Cinzel', serif";
+		ctx.fillStyle = "#36210b";
+		ctx.letterSpacing = "4px";
+		ctx.fillText(content.facultyPage2.subheading.toUpperCase(), 140, 290);
+
+		// 3 Faculty Cards Layout
+		let cardY = 360;
+		const cardW = this.width - 280;
+		const cardH = 460;
+
+		content.facultyPage2.members.forEach((m, idx) => {
+			const photoW = 340;
+			const photoH = 400;
+			const photoX = 160;
+			const photoY = cardY + 30;
+
+			// Card background matting
+			ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
+			ctx.fillRect(140, cardY, cardW, cardH);
+			ctx.strokeStyle = "#c5a059";
+			ctx.lineWidth = 1.5;
+			ctx.strokeRect(140, cardY, cardW, cardH);
+
+			// Faculty Photo Frame
+			this.drawImageFrame(
+				ctx,
+				m.imagePath,
+				photoX,
+				photoY,
+				photoW,
+				photoH,
+				"",
+				`[FACULTY ${idx + 4}]`,
+			);
+
+			// Details Text (Right of Photo)
+			const textX = photoX + photoW + 40;
+			ctx.textAlign = "left";
+
+			ctx.font = "900 38px 'Cinzel Decorative', 'Cormorant Garamond', Georgia, serif";
+			ctx.fillStyle = "#0f0803";
+			ctx.fillText(m.name, textX, photoY + 60);
+
+			ctx.font = "700 24px 'Cinzel', serif";
+			ctx.fillStyle = "#5e3e13";
+			ctx.letterSpacing = "2px";
+			ctx.fillText(m.designation.toUpperCase(), textX, photoY + 110);
+
+			ctx.font = "600 22px 'Cinzel', serif";
+			ctx.fillStyle = "#8c6527";
+			ctx.letterSpacing = "1.5px";
+			ctx.fillText(m.department, textX, photoY + 150);
+
+			// Divider accent line
+			ctx.strokeStyle = "#c5a059";
+			ctx.lineWidth = 1.2;
+			ctx.beginPath();
+			ctx.moveTo(textX, photoY + 180);
+			ctx.lineTo(textX + 420, photoY + 180);
+			ctx.stroke();
+
+			// Inspiring Quote
+			ctx.font = "italic 700 30px/1.6 'Cormorant Garamond', Georgia, serif";
+			ctx.fillStyle = "#140d06";
+			this.wrapText(ctx, m.quote, textX, photoY + 225, cardW - photoW - 80, 42);
+
+			cardY += 490;
+		});
+
+		ctx.restore();
+	}
+
+	// Page 10: THE PEOPLE AND THE MEMORIES (Photo Album)
 	private async drawPage8(
 		ctx: CanvasRenderingContext2D,
 		content: BookContent,
 	): Promise<void> {
 		this.drawPaperBase(ctx);
 		this.drawPageBorders(ctx, false, 80);
-		this.drawHeaderAndFolio(ctx, "08", "CLASS PHOTO ALBUM", false);
+		this.drawHeaderAndFolio(ctx, "10", "CLASS PHOTO ALBUM", false);
 
 		ctx.save();
 		ctx.textAlign = "left";
@@ -1092,14 +1274,14 @@ export class PageRenderer {
 		ctx.restore();
 	}
 
-	// Page 9: FROM ALL OF US (Collective Student Letter)
+	// Page 11: FROM ALL OF US (Collective Student Letter)
 	private async drawPage9(
 		ctx: CanvasRenderingContext2D,
 		content: BookContent,
 	): Promise<void> {
 		this.drawPaperBase(ctx);
 		this.drawPageBorders(ctx, false, 80);
-		this.drawHeaderAndFolio(ctx, "09", "A MESSAGE FROM THE STUDENTS", true);
+		this.drawHeaderAndFolio(ctx, "11", "A MESSAGE FROM THE STUDENTS", true);
 
 		ctx.save();
 		ctx.textAlign = "left";
@@ -1165,14 +1347,14 @@ export class PageRenderer {
 		ctx.restore();
 	}
 
-	// Page 10: FINAL THANK YOU
+	// Page 12: FINAL THANK YOU
 	private async drawPage10(
 		ctx: CanvasRenderingContext2D,
 		content: BookContent,
 	): Promise<void> {
 		this.drawPaperBase(ctx);
 		this.drawPageBorders(ctx, true, 80);
-		this.drawHeaderAndFolio(ctx, "10", "HONORING OUR MENTOR", false);
+		this.drawHeaderAndFolio(ctx, "12", "HONORING OUR MENTOR", false);
 
 		ctx.save();
 		ctx.textAlign = "center";
