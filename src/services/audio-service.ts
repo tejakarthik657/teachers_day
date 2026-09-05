@@ -1,37 +1,48 @@
 export class AudioService {
 	private audioCtx: AudioContext | null = null;
-	private isMuted: boolean = false;
+	private isMuted: boolean = true;
 	private bgAudio: HTMLAudioElement | null = null;
 
 	constructor() {
 		const savedMute = localStorage.getItem("td_book_muted");
-		this.isMuted = savedMute !== null ? savedMute === "true" : false;
+		this.isMuted = savedMute !== null ? savedMute === "true" : true;
 
 		// Load custom Ilahi Instrumental background music
 		this.initBgAudio();
 
-		// Attach user interaction listeners to handle browser autoplay policies
-		const enableAudioOnInteraction = () => {
+		// User gesture handler to unlock audio playback on modern browsers
+		const unlockAudio = () => {
 			this.initContext();
-			if (!this.isMuted) {
+			if (!this.isMuted && this.bgAudio && this.bgAudio.paused) {
 				this.playBGM();
 			}
-			window.removeEventListener("click", enableAudioOnInteraction);
-			window.removeEventListener("touchstart", enableAudioOnInteraction);
-			window.removeEventListener("keydown", enableAudioOnInteraction);
 		};
 
-		window.addEventListener("click", enableAudioOnInteraction, { passive: true });
-		window.addEventListener("touchstart", enableAudioOnInteraction, { passive: true });
-		window.addEventListener("keydown", enableAudioOnInteraction, { passive: true });
+		window.addEventListener("click", unlockAudio, { passive: true });
+		window.addEventListener("touchstart", unlockAudio, { passive: true });
+		window.addEventListener("keydown", unlockAudio, { passive: true });
 	}
 
 	private initBgAudio(): void {
 		try {
-			this.bgAudio = new Audio("/audio/Ilahi Instrumental.mp3");
-			this.bgAudio.loop = true; // Ensure continuous loop playback
-			this.bgAudio.volume = 0.55;
+			// Encoded URI path to handle space in file name cleanly across all web servers
+			const primarySrc = encodeURI("/audio/Ilahi Instrumental.mp3");
+			this.bgAudio = new Audio(primarySrc);
+			this.bgAudio.loop = true; // Loop music continuously forever
+			this.bgAudio.volume = 0.65;
 			this.bgAudio.preload = "auto";
+
+			// Robust fallback handling
+			this.bgAudio.onerror = () => {
+				if (this.bgAudio) {
+					console.warn("Retrying with fallback audio path...");
+					this.bgAudio.src = "/ilahi-instrumental.mp3";
+					this.bgAudio.load();
+					if (!this.isMuted) {
+						this.playBGM();
+					}
+				}
+			};
 		} catch (err) {
 			console.error("Failed to initialize background audio element", err);
 		}
@@ -74,9 +85,12 @@ export class AudioService {
 
 	public playBGM(): void {
 		if (this.isMuted || !this.bgAudio) return;
-		this.bgAudio.play().catch(err => {
-			console.log("Autoplay waiting for user gesture:", err);
-		});
+		const playPromise = this.bgAudio.play();
+		if (playPromise !== undefined) {
+			playPromise.catch(err => {
+				console.log("Audio playback waiting for user interaction:", err);
+			});
+		}
 	}
 
 	public pauseBGM(): void {
